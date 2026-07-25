@@ -1,0 +1,24 @@
+# Data handling
+pandas==2.2.2
+numpy==1.26.4
+
+# Process mining
+pm4py==2.7.11
+
+# Machine learning
+scikit-learn==1.5.1
+optuna==3.6.1
+shap==0.46.0
+
+# Experiment tracking
+mlflow==2.14.3
+
+# Visualization (notebook exploration)
+matplotlib==3.9.1
+seaborn==0.13.2
+
+# Interactive app
+streamlit==1.37.0
+
+# Notebook environment
+jupyter==1.0.0
