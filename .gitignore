@@ -245,9 +245,3 @@ mlflow/mlartifacts/
 # OS/editor cruft
 .DS_Store
 .vscode/
-
-cd your-repo-folder
-# create/paste content into .gitignore, then:
-git add .gitignore
-git commit -m "Add .gitignore"
-git push origin main
