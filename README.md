@@ -122,3 +122,4 @@ This project is licensed under the MIT License — see [LICENSE](LICENSE) for de
 ## Author
 
 Johannes Kuhaupt, LL.M., PMP
+[LinkedIn](https://www.linkedin.com/in/johanneskuhaupt/) · [GitHub](https://github.com/JohannesKuh/)
