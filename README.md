@@ -15,12 +15,13 @@ Process mining and machine learning applied to SAP procurement data (BPI Challen
 ## Project Overview
 
 This project applies process mining and predictive modeling to a real-world SAP procurement event log, covering the full pipeline from process discovery to a deployable prediction tool.
+The analysis follows the three classical process mining stages — **process discovery**, **conformance checking**, and **process enhancement** — and finally extends enhancement into predictive process monitoring using machine learning.
 
 ### Key Steps
 1. Load and clean the BPI 2019 event log (Apache Hop / pandas)
-2. Discover the as-is process with PM4Py (Inductive Miner)
+2. Process discovery — discover the as-is process with PM4Py (Inductive Miner)
 3. Conformance checking — identify deviations from the ideal process flow
-4. Bottleneck and delay analysis
+4. Process enhancement — bottleneck and delay analysis using timestamp data
 5. Feature engineering for delay prediction
 6. Train and tune a delay-prediction model (scikit-learn + Optuna), tracked with MLflow
 7. Explain model predictions with SHAP
