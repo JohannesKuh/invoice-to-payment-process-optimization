@@ -61,7 +61,7 @@ The goal is a combination of diagnostic insight (process mining) and a predictiv
 
 ## Tools & Technologies
 
-PM4Py · Apache Hop · scikit-learn · Optuna · MLflow · SHAP · Power BI (incl. native Python visual integration) · Process.Science (Power BI visual) · Disco · psmineR (R, stretch goal) · Power Automate Process Mining visual (stretch goal)
+PM4Py · Apache Hop · scikit-learn · Optuna · MLflow · SHAP · Power BI (incl. native Python visual integration) · Process.Science (Power BI visual) · Disco · psmineR (R, stretch goal) · Power Automate Process Mining visual (stretch goal) · Claude (Anthropic)
 
 ## Repository Structure
 
@@ -107,6 +107,13 @@ invoice-to-payment-process-optimization/
 └── docs/
     └── architecture_diagram.png      # PM4Py → ML → Power BI flow
 ```
+
+## Acknowledgements
+
+- Dataset provided ...
+- Certificate: ... 🎓 (TU/e/Coursera)
+- AI assistance provided by Claude (Anthropic) for code guidance, 
+  interpretation refinement and documentation support
 
 ## License
 
