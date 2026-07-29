@@ -51,7 +51,8 @@ The goal is a combination of diagnostic insight (process mining) and a predictiv
 - **ETL:** Apache Hop for reproducible event-log extraction and transformation
 - **Machine Learning:** delay-prediction model (scikit-learn), tuned via Optuna, tracked in MLflow
 - **Explainability:** SHAP for global and individual-case feature importance
-- **Visualization:** Power BI dashboard for business-facing KPIs, including a native Python-visual embedding of PM4Py (via [viadee's](https://www.viadee.de/en/blog/process-mining-mit-power-bi/) approach)
+- **Visualization:** Power BI dashboard for business-facing KPIs, built on model predictions scored offline and exported as a table, including a native
+  Python-visual embedding of PM4Py (via [viadee's](https://www.viadee.de/en/blog/process-mining-mit-power-bi/) approach)
 - **Industry Tool Demonstration:** limited demos of Process.Science's free Power BI visual and Disco (30-day trial), cross-validating the open-source pipeline against commercial tools on a filtered data subset
 - **Stretch goals:** R-based performance spectrum analysis ([psmineR](https://cran.r-project.org/web/packages/psmineR/index.html)); side-by-side comparison of free Power BI process-mining visuals
 
