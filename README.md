@@ -7,15 +7,14 @@ Process mining and machine learning applied to SAP procurement data (BPI Challen
 - Discovered the as-is process with PM4Py (Inductive Miner) and identified [N] major bottlenecks/deviations through conformance checking
 - Built a delay-prediction model ([algorithm], tuned with Optuna) achieving [F1 / precision / recall] on the test set
 - Top predictors of delay: [feature 1], [feature 2], [feature 3] — explained via SHAP for individual-case transparency
-- Practical use case: a Streamlit "what-if" app lets procurement teams test how process changes (e.g., automated matching, earlier goods receipt) shift predicted delay risk
+- Practical use case: procurement teams can use the model's predictions and SHAP explanations to identify at-risk invoices early and prioritize intervention
 - Business impact: reducing [specific bottleneck] could cut average case duration by [X] days, directly improving on-time payment rates and early-payment discount capture
 
 *(Numbers above to be filled in once analysis is complete — this structure keeps the summary review-ready throughout the project.)*
 
 ## Project Overview
 
-This project applies process mining and predictive modeling to a real-world SAP procurement event log, covering the full pipeline from process discovery to a deployable prediction tool.
-The analysis follows the three classical process mining stages — **process discovery**, **conformance checking**, and **process enhancement** — and finally extends enhancement into predictive process monitoring using machine learning.
+This project applies process mining and predictive modeling to a real-world SAP procurement event log, covering the full pipeline from process discovery to a deployable prediction tool. The analysis follows the three classical process mining stages — **process discovery**, **conformance checking**, and **process enhancement** — and finally extends enhancement into predictive process monitoring using machine learning.
 
 ### Key Steps
 1. Load and clean the BPI 2019 event log (Apache Hop / pandas)
@@ -25,9 +24,10 @@ The analysis follows the three classical process mining stages — **process dis
 5. Feature engineering for delay prediction
 6. Train and tune a delay-prediction model (scikit-learn + Optuna), tracked with MLflow
 7. Explain model predictions with SHAP
-8. Build a Power BI dashboard for business-facing KPIs
-9. Build a Streamlit "what-if" app for scenario testing
-10. Demonstrate the same process discovery step using an industry-standard commercial tool (Process.Science / Disco) alongside the open-source pipeline
+8. Build a Power BI dashboard for business-facing KPIs, including a native Python-visual embedding of PM4Py directly inside Power BI
+9. Demonstrate the same process discovery step using an industry-standard commercial tool (Process.Science / Disco) alongside the open-source pipeline
+10. *(Stretch goal)* Performance spectrum analysis using R's psmineR package, exploring segment-level timing patterns as a complement to the standard bottleneck analysis
+11. *(Stretch goal)* Side-by-side comparison of free Power BI process-mining visuals (Process.Science, Microsoft's native Power Automate Process Mining visual) on the same data subset
 
 ## Business Problem
 
@@ -36,7 +36,7 @@ Late invoice payments and inefficient procurement processes carry real costs: mi
 1. **Where** in the invoice-to-payment process do delays and deviations actually occur (as opposed to where the documented process assumes they occur)?
 2. **Can delays be predicted early enough** — e.g., right after goods receipt or invoice entry — for procurement teams to intervene before payment is late?
 
-The goal is a combination of diagnostic insight (process mining) and a forward-looking tool (ML + Streamlit) that together support both process redesign and day-to-day case triage.
+The goal is a combination of diagnostic insight (process mining) and a predictive layer (machine learning) that together support both process redesign and day-to-day case triage.
 
 ## Dataset
 
@@ -48,16 +48,12 @@ The goal is a combination of diagnostic insight (process mining) and a forward-l
 ## Approach
 
 - **Process Mining:** PM4Py for process discovery (Inductive Miner) and conformance checking against the expected purchase-to-pay flow
-- **ETL:** Apache Hop for reproducible event-log extraction and transformation ahead of analysis
-- **Machine Learning:** delay-prediction model trained with scikit-learn, hyperparameters tuned via Optuna, experiments tracked in MLflow
-- **Explainability:** SHAP values for both global feature importance and individual-case explanations
-- **Visualization:** Power BI dashboard for business-facing KPIs (case duration, delay rate, bottleneck locations)
-- **Interactivity:** Streamlit app for what-if scenario testing on individual cases
-- **Industry Tool Demonstration:** In addition to the open-source pipeline, this project includes a limited demonstration of two commercial process-mining tools:
-  - **Process.Science's free Power BI visual** (Microsoft AppSource) — shows direct process-mining integration inside Power BI on a filtered subset of the event log
-  - **Disco** (Fluxicon, 30-day trial) — used to cross-validate the discovered process map against PM4Py's output
-  
-  These are included to demonstrate familiarity with commercial tooling common in enterprise process-mining roles, and to make an explicit, honest case for why the core pipeline stays open-source and reproducible. Due to free-tier data limits, these demonstrations use a filtered subset rather than the full BPI 2019 log.
+- **ETL:** Apache Hop for reproducible event-log extraction and transformation
+- **Machine Learning:** delay-prediction model (scikit-learn), tuned via Optuna, tracked in MLflow
+- **Explainability:** SHAP for global and individual-case feature importance
+- **Visualization:** Power BI dashboard for business-facing KPIs, including a native Python-visual embedding of PM4Py (via [viadee's](https://www.viadee.de/en/blog/process-mining-mit-power-bi/) approach)
+- **Industry Tool Demonstration:** limited demos of Process.Science's free Power BI visual and Disco (30-day trial), cross-validating the open-source pipeline against commercial tools on a filtered data subset
+- **Stretch goals:** R-based performance spectrum analysis ([psmineR](https://cran.r-project.org/web/packages/psmineR/index.html)); side-by-side comparison of free Power BI process-mining visuals
 
 ## Key Findings
 
@@ -65,7 +61,7 @@ The goal is a combination of diagnostic insight (process mining) and a forward-l
 
 ## Tools & Technologies
 
-PM4Py · Apache Hop · scikit-learn · Optuna · MLflow · SHAP · Power BI · Streamlit · Process.Science (Power BI visual) · Disco
+PM4Py · Apache Hop · scikit-learn · Optuna · MLflow · SHAP · Power BI (incl. native Python visual integration) · Process.Science (Power BI visual) · Disco · psmineR (R, stretch goal) · Power Automate Process Mining visual (stretch goal)
 
 ## Repository Structure
 
@@ -100,20 +96,16 @@ invoice-to-payment-process-optimization/
 │   └── (tracking config / experiment notes, not the full mlruns/ folder)
 │
 ├── powerbi/
-│   ├── invoice_dashboard.pbix
+│   ├── invoice_dashboard.pbix              # includes native Python visual (PM4Py)
 │   └── screenshots/
 │       └── process_science_discovery.png     # Process.Science demo (see Approach)
-│
-├── streamlit_app/
-│   ├── app.py                       # "what-if" delay prediction app
-│   └── requirements.txt
 │
 ├── reports/
 │   ├── process_mining_findings.md
 │   └── model_performance_summary.md
 │
 └── docs/
-    └── architecture_diagram.png      # PM4Py → ML → Power BI/Streamlit flow
+    └── architecture_diagram.png      # PM4Py → ML → Power BI flow
 ```
 
 ## License
