@@ -1,6 +1,6 @@
 # Invoice-to-Payment Process Optimization & Delay Prediction
 
-Process mining and machine learning applied to SAP procurement data (BPI Challenge 2019) — combining PM4Py, scikit-learn, and Power BI to discover process bottlenecks and predict invoice payment delays.
+Process mining and machine learning applied to a SAP procurement data set of a large multinational company headquartered in the Netherlands containing 1,595,923 events across 251,734 cases (BPI Challenge 2019) — combining PM4Py, scikit-learn, and Power BI to discover processes, analyze throughput, check conformance and predict delays or deviations.
 
 ## Executive Summary
 - Analyzed [N] procurement cases from the BPI 2019 SAP event log using process mining and machine learning
