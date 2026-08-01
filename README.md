@@ -31,19 +31,56 @@ This project applies process mining and predictive modeling to a real-world SAP 
 
 ## Business Problem
 
-Late invoice payments and inefficient procurement processes carry real costs: missed early-payment discounts, strained supplier relationships, and manual rework when exceptions occur. This project asks two linked business questions:
+The dataset originates from the BPI Challenge 2019: a large multinational 
+company headquartered in the Netherlands, operating in the coatings and 
+paints industry across 60 subsidiaries, submitted its purchase order 
+handling process for investigation. The process owner's motivation was 
+**compliance** — understanding not just how the process runs on average, 
+but where and how severely it deviates from expectation.
 
-1. **Where** in the invoice-to-payment process do delays and deviations actually occur (as opposed to where the documented process assumes they occur)?
-2. **Can delays be predicted early enough** — e.g., right after goods receipt or invoice entry — for procurement teams to intervene before payment is late?
+This project follows the three original questions posed by the BPI 
+Challenge, extended with a predictive layer:
 
-The goal is a combination of diagnostic insight (process mining) and a predictive layer (machine learning) that together support both process redesign and day-to-day case triage.
+1. **Process discovery:** is there a collection of process models that 
+   together properly describe the process captured in this data? (The 
+   challenge itself identifies at least four underlying flow types — 
+   3-way matching with GR-based invoicing, 3-way matching without, 2-way 
+   matching, and consignment.)
+2. **Throughput analysis (enhancement):** what is the throughput of the 
+   invoicing process — the time between goods receipt, invoice receipt, 
+   and payment (invoice clearing) — including matching the correct goods 
+   receipts to invoices when a single line item has several of each?
+3. **Conformance and deviation:** which purchase documents stand out from 
+   the log, where do they deviate from the discovered process models, and 
+   how severe are these deviations — both in terms of process flow and 
+   invoice values (e.g., vendors producing disproportionate rework due to 
+   invoice errors)?
+4. **Prediction (this project's extension):** can invoices likely to 
+   experience delay or deviation be flagged early enough for intervention, 
+   before payment is late?
 
 ## Dataset
 
-- **Source:** BPI Challenge 2019 — SAP procurement event log, [4TU Data Repository](https://data.4tu.nl/)
-- **License:** Dataset is released under its own terms (CC-BY or similar per 4TU) — separate from this repository's MIT license, which covers code only
-- **Scope:** [N] cases, [N] events, covering the purchase-to-pay process from purchase order through invoice and payment
-- **Key attributes:** case ID, activity, timestamp, resource, purchasing document type, vendor, item category
+- **Source:** BPI Challenge 2019 — SAP procurement event log, published via 
+  [4TU.ResearchData](https://data.4tu.nl/articles/_/12715853/1) 
+  ([direct file download](https://data.4tu.nl/file/35ed7122-966a-484e-a0e1-749b64e3366d/864493d1-3a58-47f6-ad6f-27f95f995828), 
+  `BPI_Challenge_2019.xes`, ~695 MB uncompressed)
+- **License:** CC BY 4.0 (dataset) — separate from this repository's MIT 
+  license, which covers code only. Citation: van Dongen, B.F., *BPI 
+  Challenge 2019*. 4TU.ResearchData.
+- **Format:** IEEE XES standard, read natively via `pm4py.read_xes()`
+- **Scope:** 1,595,923 events across 251,734 cases (case ID = purchase 
+  document + item), spanning 76,349 purchase documents, 42 activities, and 
+  627 users (607 human, 20 batch/automated) — covering purchase orders 
+  submitted in 2018 across 60 subsidiaries
+- **Key attributes:** case ID, activity, timestamp, resource (user), 
+  purchasing document ID, item type, item category (3-way with/without 
+  GR-based invoicing, 2-way, consignment), vendor, company (subsidiary), 
+  spend classification text, GR-based invoice verification flag, goods 
+  receipt flag
+- **Note:** the raw `.xes` file is not committed to this repository due to 
+  its size — see the link above to download it directly. `data/raw/` is 
+  excluded via `.gitignore`.
 
 ## Approach
 
