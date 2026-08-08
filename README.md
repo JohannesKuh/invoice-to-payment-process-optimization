@@ -110,6 +110,17 @@ than natively identified) entities, since neither the original XES
 export nor TU/e's own graph model include distinct document IDs for 
 individual goods receipts or invoices.
 
+## Roadmap
+Object-centric process mining (OCEL 2.0 conversion + PM4Py's OC-DFG/
+OC-Petri net discovery) is planned as a post-launch extension, to more 
+accurately capture the one-to-many relationships (e.g., multiple goods 
+receipts and invoices per line item) that this project's core analysis 
+simplifies via a single case notion. TU Eindhoven's own graph-based 
+object-centric representation of this dataset ([Esser & Fahland, 2021](https://doi.org/10.4121/14169614)) 
+independently confirms this modeling gap — their object model also 
+treats only PO, POItem, Resource, and Vendor as distinct entities. 
+Implementation is expected after the core project's completion.
+
 ## Key Findings
 
 *(To be completed once analysis is finished.)*
