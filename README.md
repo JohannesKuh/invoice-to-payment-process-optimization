@@ -111,15 +111,14 @@ export nor TU/e's own graph model include distinct document IDs for
 individual goods receipts or invoices.
 
 ## Roadmap
-Object-centric process mining (OCEL 2.0 conversion + PM4Py's OC-DFG/
-OC-Petri net discovery) is planned as a post-launch extension, to more 
-accurately capture the one-to-many relationships (e.g., multiple goods 
-receipts and invoices per line item) that this project's core analysis 
-simplifies via a single case notion. TU Eindhoven's own graph-based 
-object-centric representation of this dataset ([Esser & Fahland, 2021](https://doi.org/10.4121/14169614)) 
-independently confirms this modeling gap — their object model also 
-treats only PO, POItem, Resource, and Vendor as distinct entities. 
-Implementation is expected after the core project's completion.
+
+Object-centric process mining (OCEL 2.0 conversion + PM4Py's OC-DFG/ OC-Petri net discovery) is planned as a post-launch extension, to more accurately capture the one-to-many relationships (e.g., multiple goods receipts and invoices per line item) that this project's core analysis simplifies via a single case notion. TU Eindhoven's own graph-based object-centric representation of this dataset ([Esser & Fahland, 2021](https://doi.org/10.4121/14169614)) independently confirms this modeling gap — their object model also treats only PO, POItem, Resource, and Vendor as distinct entities. Implementation is expected after the core project's completion.
+
+This extension will explore questions that specifically exploit the object-centric view, building directly on the original BPI Challenge's own compliance framing:
+
+- **Object multiplicity vs. delay risk:** for purchase order items with multiple Goods Receipt and Invoice objects (e.g., 12 GRs/invoices for a single rent line item), does the number of related objects correlate with total case duration or deviation severity?
+- **GR–Invoice desynchronization:** at the object level, how long does a specific Invoice object wait for its corresponding Goods Receipt object (or vice versa), and does this gap vary systematically by vendor or subsidiary?
+- **Vendor object-interaction signatures:** can vendors be segmented by their characteristic object-interaction pattern (one-to-one vs. high-multiplicity GR/Invoice relationships), and do higher-multiplicity vendors show more conformance deviations or invoice-value mismatches?
 
 ## Key Findings
 
