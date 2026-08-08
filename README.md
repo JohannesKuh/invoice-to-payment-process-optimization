@@ -28,6 +28,7 @@ This project applies process mining and predictive modeling to a real-world SAP 
 9. Demonstrate the same process discovery step using an industry-standard commercial tool (Process.Science / Disco) alongside the open-source pipeline
 10. *(Stretch goal)* Performance spectrum analysis using R's psmineR package, exploring segment-level timing patterns as a complement to the standard bottleneck analysis
 11. *(Stretch goal)* Side-by-side comparison of free Power BI process-mining visuals (Process.Science, Microsoft's native Power Automate Process Mining visual) on the same data subset
+12. 12. *(Stretch goal)* Object-centric process mining — convert the event log to OCEL 2.0 format and apply PM4Py's object-centric discovery (OC-DFG, OC-Petri nets) to capture one-to-many relationships, e.g., multiple goods receipts and invoices per line item
 
 ## Business Problem
 
@@ -92,6 +93,13 @@ Challenge, extended with a predictive layer:
   Python-visual embedding of PM4Py (via [viadee's](https://www.viadee.de/en/blog/process-mining-mit-power-bi/) approach)
 - **Industry Tool Demonstration:** limited demos of Process.Science's free Power BI visual and Disco (30-day trial), cross-validating the open-source pipeline against commercial tools on a filtered data subset
 - **Stretch goals:** R-based performance spectrum analysis ([psmineR](https://cran.r-project.org/web/packages/psmineR/index.html)); side-by-side comparison of free Power BI process-mining visuals
+- - **(Stretch goal) Object-centric process mining:** BPI 2019's case 
+  notion (purchase document + item) flattens what is actually a 
+  multi-object process (Purchase Order, Item, Goods Receipt, Invoice). 
+  A future extension could convert the event log to OCEL 2.0 format 
+  and apply PM4Py's object-centric discovery (OC-DFG, OC-Petri nets) 
+  to more accurately capture one-to-many relationships that the 
+  traditional single-case-notion analysis in this project simplifies.
 
 ## Key Findings
 
