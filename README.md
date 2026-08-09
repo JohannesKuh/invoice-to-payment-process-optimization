@@ -17,7 +17,7 @@ Process mining and machine learning applied to a SAP procurement data set of a l
 This project applies process mining and predictive modeling to a real-world SAP procurement event log, covering the full pipeline from process discovery to a deployable prediction tool. The analysis follows the three classical process mining stages — **process discovery**, **conformance checking**, and **process enhancement** — and finally extends enhancement into predictive process monitoring using machine learning.
 
 ### Key Steps
-1. Load and clean the BPI 2019 event log (Apache Hop / pandas)
+1. Load and clean the BPI 2019 event log (pandas)
 2. Process discovery — discover the as-is process with PM4Py (Inductive Miner)
 3. Conformance checking — identify deviations from the ideal process flow
 4. Process enhancement — bottleneck and delay analysis using timestamp data
@@ -86,7 +86,6 @@ Challenge, extended with a predictive layer:
 ## Approach
 
 - **Process Mining:** PM4Py for process discovery (Inductive Miner) and conformance checking against the expected purchase-to-pay flow
-- **ETL:** Apache Hop for reproducible event-log extraction and transformation
 - **Machine Learning:** delay-prediction model (scikit-learn), tuned via Optuna, tracked in MLflow
 - **Explainability:** SHAP for global and individual-case feature importance
 - **Visualization:** Power BI dashboard for business-facing KPIs, built on model predictions scored offline and exported as a table, including a native
@@ -126,7 +125,7 @@ This extension will explore questions that specifically exploit the object-centr
 
 ## Tools & Technologies
 
-PM4Py · Apache Hop · scikit-learn · Optuna · MLflow · SHAP · Power BI (incl. native Python visual integration) · Process.Science (Power BI visual) · Disco · psmineR (R, stretch goal) · Power Automate Process Mining visual (stretch goal) · Claude (Anthropic)
+PM4Py · scikit-learn · Optuna · MLflow · SHAP · Power BI (incl. native Python visual integration) · Process.Science (Power BI visual) · Disco · psmineR (R, stretch goal) · Power Automate Process Mining visual (stretch goal) · Claude (Anthropic)
 
 ## Repository Structure
 
