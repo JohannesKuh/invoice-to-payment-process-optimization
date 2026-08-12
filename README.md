@@ -87,7 +87,7 @@ Challenge, extended with a predictive layer:
 
 - **Process Mining:** PM4Py for process discovery (Inductive Miner) and conformance checking against the expected purchase-to-pay flow
 - **Machine Learning:** delay-prediction model (scikit-learn), tuned via Optuna, tracked in MLflow
-- **Explainability:** SHAP for global and individual-case feature importance
+- **Explainability:** SHAP for global and individual-case feature importance, complemented by a dtreeviz visualization of a representative decision tree for structural interpretability
 - **Visualization:** Power BI dashboard for business-facing KPIs, built on model predictions scored offline and exported as a table, including a native
   Python-visual embedding of PM4Py (via [viadee's](https://www.viadee.de/en/blog/process-mining-mit-power-bi/) approach)
 - **Industry Tool Demonstration:** limited demos of Process.Science's free Power BI visual and Disco (30-day trial), cross-validating the open-source pipeline against commercial tools on a filtered data subset
@@ -125,7 +125,7 @@ This extension will explore questions that specifically exploit the object-centr
 
 ## Tools & Technologies
 
-PM4Py · scikit-learn · Optuna · MLflow · SHAP · Power BI (incl. native Python visual integration) · Process.Science (Power BI visual) · Disco · psmineR (R, stretch goal) · Power Automate Process Mining visual (stretch goal) · Claude (Anthropic)
+PM4Py · scikit-learn · Optuna · MLflow · SHAP · dtreeviz · Power BI (incl. native Python visual integration) · Process.Science (Power BI visual) · Disco · psmineR (R, stretch goal) · Power Automate Process Mining visual (stretch goal) · Claude (Anthropic)
 
 ## Repository Structure
 
