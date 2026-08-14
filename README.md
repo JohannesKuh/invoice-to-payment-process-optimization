@@ -86,6 +86,7 @@ Challenge, extended with a predictive layer:
 ## Approach
 
 - **Process Mining:** PM4Py for process discovery (Inductive Miner) and conformance checking against the expected purchase-to-pay flow
+- **Segmented analysis:** where relevant, process discovery, conformance checking, and duration analysis are performed both in aggregate and segmented by item category (the four flow types), vendor, subsidiary, and time period — since aggregate metrics can mask meaningful variation across these dimensions (e.g., a company-wide average duration can look acceptable while masking poor performance concentrated in a few subsidiaries).
 - **Machine Learning:** delay-prediction model (scikit-learn), tuned via Optuna, tracked in MLflow
 - **Explainability:** SHAP for global and individual-case feature importance, complemented by a dtreeviz visualization of a representative decision tree for structural interpretability
 - **Visualization:** Power BI dashboard for business-facing KPIs, built on model predictions scored offline and exported as a table, including a native
