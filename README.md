@@ -29,6 +29,7 @@ This project applies process mining and predictive modeling to a real-world SAP 
 10. *(Stretch goal)* Performance spectrum analysis using R's psmineR package, exploring segment-level timing patterns as a complement to the standard bottleneck analysis
 11. *(Stretch goal)* Side-by-side comparison of free Power BI process-mining visuals (Process.Science, Microsoft's native Power Automate Process Mining visual) on the same data subset
 12. *(Stretch goal)* Object-centric process mining — convert the event log to OCEL 2.0 format and apply PM4Py's object-centric discovery (OC-DFG, OC-Petri nets) to capture one-to-many relationships, e.g., multiple goods receipts and invoices per line item
+13. *(Stretch goal)* Social network analysis — PM4Py's native handover-of-work and working-together networks, analyzing resource collaboration patterns across the 627 users in the log, cross-referenced with duration data from Step 4 to distinguish genuine bottlenecks from high-throughput specialists
 
 ## Business Problem
 
@@ -99,6 +100,15 @@ Challenge, extended with a predictive layer:
   and apply PM4Py's object-centric discovery (OC-DFG, OC-Petri nets) 
   to more accurately capture one-to-many relationships that the 
   traditional single-case-notion analysis in this project simplifies.
+- **(Stretch goal) Social network analysis:** PM4Py's native 
+  organizational mining functions (`discover_handover_of_work_network`, 
+  `discover_working_together_network`) applied to the log's 627 
+  resources, to explore who handovers concentrate around and whether 
+  central resources correspond to process bottlenecks. Network 
+  centrality alone shows frequency of connection, not speed — so this 
+  is cross-referenced against Step 4's duration/throughput data before 
+  drawing any bottleneck conclusions, rather than inferred from the 
+  network visualization alone.
 
   **Note:** TU Eindhoven has published an official graph-based object-centric 
 representation of this dataset ([Event Graph of BPI Challenge 2019](https://doi.org/10.4121/14169614), 
