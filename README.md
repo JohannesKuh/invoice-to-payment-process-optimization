@@ -16,7 +16,8 @@ Process mining and machine learning applied to a SAP procurement data set of a l
 
 This project applies process mining and predictive modeling to a real-world SAP procurement event log, covering the full pipeline from process discovery to a deployable prediction tool. The analysis follows the three classical process mining stages — **process discovery**, **conformance checking**, and **process enhancement** — and finally extends enhancement into predictive process monitoring using machine learning.
 
-### Key Steps
+## Key Steps
+
 1. Load and clean the BPI 2019 event log (pandas)
 2. Process discovery — discover the as-is process with PM4Py (Inductive Miner)
 3. Conformance checking — identify deviations from the ideal process flow
@@ -26,10 +27,8 @@ This project applies process mining and predictive modeling to a real-world SAP 
 7. Explain model predictions with SHAP
 8. Build a Power BI dashboard for business-facing KPIs, including a native Python-visual embedding of PM4Py directly inside Power BI
 9. Demonstrate the same process discovery step using an industry-standard commercial tool (Process.Science / Disco) alongside the open-source pipeline
-10. *(Stretch goal)* Performance spectrum analysis using R's psmineR package, exploring segment-level timing patterns as a complement to the standard bottleneck analysis
-11. *(Stretch goal)* Side-by-side comparison of free Power BI process-mining visuals (Process.Science, Microsoft's native Power Automate Process Mining visual) on the same data subset
-12. *(Stretch goal)* Object-centric process mining — convert the event log to OCEL 2.0 format and apply PM4Py's object-centric discovery (OC-DFG, OC-Petri nets) to capture one-to-many relationships, e.g., multiple goods receipts and invoices per line item
-13. *(Stretch goal)* Social network analysis — PM4Py's native handover-of-work and working-together networks, analyzing resource collaboration patterns across the 627 users in the log, cross-referenced with duration data from Step 4 to distinguish genuine bottlenecks from high-throughput specialists
+10. (Optional, time-permitting) Performance spectrum analysis using R's psmineR package
+11. (Optional, time-permitting) Side-by-side comparison of free Power BI process-mining visuals (Process.Science, Microsoft's native Power Automate Process Mining visual)
 
 ## Business Problem
 
@@ -119,15 +118,43 @@ than natively identified) entities, since neither the original XES
 export nor TU/e's own graph model include distinct document IDs for 
 individual goods receipts or invoices.
 
-## Roadmap
+## Planned Extensions
+These extensions are committed and will be completed — the open 
+question is timing, not whether. They are deliberately decoupled from 
+the September 20, 2026 deadline so they don't compete with the core 
+pipeline under time pressure.
 
-Object-centric process mining (OCEL 2.0 conversion + PM4Py's OC-DFG/ OC-Petri net discovery) is planned as a post-launch extension, to more accurately capture the one-to-many relationships (e.g., multiple goods receipts and invoices per line item) that this project's core analysis simplifies via a single case notion. TU Eindhoven's own graph-based object-centric representation of this dataset ([Esser & Fahland, 2021](https://doi.org/10.4121/14169614)) independently confirms this modeling gap — their object model also treats only PO, POItem, Resource, and Vendor as distinct entities. Implementation is expected after the core project's completion.
+**Social network analysis** *(lower complexity — likely first)*
+PM4Py's native handover-of-work and working-together networks, 
+analyzing resource collaboration patterns across the 627 users in the 
+log, cross-referenced with duration data from Step 4 to distinguish 
+genuine bottlenecks from high-throughput specialists.
 
-This extension will explore questions that specifically exploit the object-centric view, building directly on the original BPI Challenge's own compliance framing:
+**Object-centric process mining** *(higher complexity — "Project 1 v2")*
+Object-centric process mining (OCEL 2.0 conversion + PM4Py's OC-DFG/
+OC-Petri net discovery) is planned as a post-launch extension, to more
+accurately capture the one-to-many relationships (e.g., multiple goods
+receipts and invoices per line item) that this project's core analysis
+simplifies via a single case notion. TU Eindhoven's own graph-based
+object-centric representation of this dataset ([Esser & Fahland, 2021](https://doi.org/10.4121/14169614))
+independently confirms this modeling gap — their object model also
+treats only PO, POItem, Resource, and Vendor as distinct entities.
 
-- **Object multiplicity vs. delay risk:** for purchase order items with multiple Goods Receipt and Invoice objects (e.g., 12 GRs/invoices for a single rent line item), does the number of related objects correlate with total case duration or deviation severity?
-- **GR–Invoice desynchronization:** at the object level, how long does a specific Invoice object wait for its corresponding Goods Receipt object (or vice versa), and does this gap vary systematically by vendor or subsidiary?
-- **Vendor object-interaction signatures:** can vendors be segmented by their characteristic object-interaction pattern (one-to-one vs. high-multiplicity GR/Invoice relationships), and do higher-multiplicity vendors show more conformance deviations or invoice-value mismatches?
+This extension will explore questions that specifically exploit the
+object-centric view, building directly on the original BPI Challenge's
+own compliance framing:
+- **Object multiplicity vs. delay risk:** for purchase order items with
+  multiple Goods Receipt and Invoice objects (e.g., 12 GRs/invoices for
+  a single rent line item), does the number of related objects
+  correlate with total case duration or deviation severity?
+- **GR–Invoice desynchronization:** at the object level, how long does
+  a specific Invoice object wait for its corresponding Goods Receipt
+  object (or vice versa), and does this gap vary systematically by
+  vendor or subsidiary?
+- **Vendor object-interaction signatures:** can vendors be segmented by
+  their characteristic object-interaction pattern (one-to-one vs.
+  high-multiplicity GR/Invoice relationships), and do higher-multiplicity
+  vendors show more conformance deviations or invoice-value mismatches?
 
 ## Key Findings
 
