@@ -130,6 +130,15 @@ analyzing resource collaboration patterns across the 627 users in the
 log, cross-referenced with duration data from Step 4 to distinguish 
 genuine bottlenecks from high-throughput specialists.
 
+*Extension: workload vs. service time.* Building on Nakatumba & van der 
+Aalst's application of the Yerkes-Dodson Law of Arousal to process 
+mining ([BPM 2009 workshop paper](https://doi.org/10.1007/978-3-642-12186-9_8)), 
+this analysis will compute each resource's concurrent workload at the 
+time of each completed activity and test — via regression — whether 
+service time follows the predicted inverted-U pattern: moderate 
+workload correlating with faster performance, with degradation at both 
+very low and very high workload.
+
 **Object-centric process mining** *(higher complexity — "Project 1 v2")*
 Object-centric process mining (OCEL 2.0 conversion + PM4Py's OC-DFG/
 OC-Petri net discovery) is planned as a post-launch extension, to more
