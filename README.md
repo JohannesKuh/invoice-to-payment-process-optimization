@@ -180,35 +180,33 @@ invoice-to-payment-process-optimization/
 │
 ├── README.md
 ├── LICENSE                          # MIT (code only — see Dataset section for data license)
-├── requirements.txt / environment.yml
+├── requirements.txt
 ├── .gitignore
 │
 ├── data/
-│   ├── raw/                         # BPI 2019 XES/CSV (or link if too large for repo)
-│   ├── processed/                   # cleaned event log, feature-engineered CSVs
-│   └── data_dictionary.md
+│   └── BPI Challenge 2019_Data/     # both raw and processed files together
+│       ├── BPI_Challenge_2019.xes         # raw file (linked, not committed — see Dataset section)
+│       └── BPI_2019_cleaned.parquet       # cleaned output from Notebook 1
 │
 ├── notebooks/
 │   ├── 01_data_loading_cleaning.ipynb
-│   ├── 02_process_discovery_pm4py.ipynb      # Inductive Miner, process map
-│   ├── 03_conformance_checking.ipynb         # deviations, bottlenecks
-│   ├── 04_feature_engineering.ipynb          # case duration, delay labels, etc.
-│   ├── 05_delay_prediction_model.ipynb       # scikit-learn + Optuna tuning
-│   └── 06_shap_explainability.ipynb
+│   ├── 02_process_discovery.ipynb        # Inductive Miner, process map
+│   ├── 03_conformance_checking.ipynb     # deviations, de facto vs. de jure
+│   ├── 04_process_enhancement.ipynb      # bottlenecks, throughput, variants
+│   ├── 05_feature_engineering.ipynb      # case duration, delay labels, etc.
+│   ├── 06_delay_prediction_model.ipynb   # scikit-learn + Optuna tuning
+│   └── 07_shap_explainability.ipynb
 │
-├── src/
-│   ├── data_prep.py
-│   ├── process_mining_utils.py
-│   ├── model_training.py
-│   └── evaluation.py
-│
-├── mlflow/
-│   └── (tracking config / experiment notes, not the full mlruns/ folder)
+├── extensions/                      # Planned Extensions (see README section below) —
+│   │                                 # committed, but not deadline-bound; not part of
+│   │                                 # the numbered core sequence above
+│   ├── social_network_analysis.ipynb
+│   └── ocpm_extension.ipynb
 │
 ├── powerbi/
-│   ├── invoice_dashboard.pbix              # includes native Python visual (PM4Py)
+│   ├── invoice_dashboard.pbix
 │   └── screenshots/
-│       └── process_science_discovery.png     # Process.Science demo (see Approach)
+│       └── process_science_discovery.png
 │
 ├── reports/
 │   ├── process_mining_findings.md
