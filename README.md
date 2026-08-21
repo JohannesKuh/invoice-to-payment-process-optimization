@@ -26,7 +26,11 @@ This project applies process mining and predictive modeling to a real-world SAP 
 6. Train and tune a delay-prediction model (scikit-learn + Optuna), tracked with MLflow
 7. Explain model predictions with SHAP
 8. Build a Power BI dashboard for business-facing KPIs, including a native Python-visual embedding of PM4Py directly inside Power BI
-9. Demonstrate the same process discovery step using an industry-standard commercial tool (Process.Science / Disco) alongside the open-source pipeline
+9. Demonstrate the same process discovery step using an industry-standard 
+   commercial tool (Process.Science / Disco) alongside the open-source 
+   pipeline — prepared via Process.Science's free official "ps4pbi Analyst" 
+   academy course, covering Root Cause Analyzer, Variants/Case Analyzer, 
+   and other Power BI visual features relevant to this comparison
 10. (Optional, time-permitting) Performance spectrum analysis using R's psmineR package
 11. (Optional, time-permitting) Side-by-side comparison of free Power BI process-mining visuals (Process.Science, Microsoft's native Power Automate Process Mining visual)
 
@@ -90,7 +94,12 @@ Challenge, extended with a predictive layer:
 - **Explainability:** SHAP for global and individual-case feature importance, complemented by a dtreeviz visualization of a representative decision tree for structural interpretability
 - **Visualization:** Power BI dashboard for business-facing KPIs, built on model predictions scored offline and exported as a table, including a native
   Python-visual embedding of PM4Py (via [viadee's](https://www.viadee.de/en/blog/process-mining-mit-power-bi/) approach)
-- **Industry Tool Demonstration:** limited demos of Process.Science's free Power BI visual and Disco (30-day trial), cross-validating the open-source pipeline against commercial tools on a filtered data subset
+- **Industry Tool Demonstration:** limited demos of Process.Science's free 
+  Power BI visual and Disco (30-day trial), cross-validating the open-source 
+  pipeline against commercial tools on a filtered data subset. Preparation 
+  includes Process.Science's own free "ps4pbi Analyst" course (20 steps, 
+  free certificate), covering the visual's Root Cause Analyzer and 
+  Variants/Case Analyzer features directly relevant to this comparison.
 - **Stretch goals:** R-based performance spectrum analysis ([psmineR](https://cran.r-project.org/web/packages/psmineR/index.html)); side-by-side comparison of free Power BI process-mining visuals
 - **Stretch goal Object-centric process mining:** BPI 2019's case 
   notion (purchase document + item) flattens what is actually a 
