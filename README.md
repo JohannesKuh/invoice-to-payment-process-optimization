@@ -128,51 +128,65 @@ export nor TU/e's own graph model include distinct document IDs for
 individual goods receipts or invoices.
 
 ## Planned Extensions
-These extensions are committed and will be completed — the open 
-question is timing, not whether. They are deliberately decoupled from 
-the September 20, 2026 deadline so they don't compete with the core 
-pipeline under time pressure.
+These extensions are committed and will be completed — the open question is 
+timing, not whether. They are deliberately decoupled from the September 20, 
+2026 deadline so they don't compete with the core pipeline under time pressure.
 
 **Social network analysis** *(lower complexity — likely first)*
-PM4Py's native handover-of-work and working-together networks, 
-analyzing resource collaboration patterns across the 627 users in the 
-log, cross-referenced with duration data from Step 4 to distinguish 
-genuine bottlenecks from high-throughput specialists.
+PM4Py's native handover-of-work and working-together networks, analyzing 
+resource collaboration patterns across the 627 users in the log, 
+cross-referenced with duration data from Step 4 to distinguish genuine 
+bottlenecks from high-throughput specialists.
 
 *Extension: workload vs. service time.* Building on Nakatumba & van der 
-Aalst's application of the Yerkes-Dodson Law of Arousal to process 
-mining ([BPM 2009 workshop paper](https://doi.org/10.1007/978-3-642-12186-9_8)), 
-this analysis will compute each resource's concurrent workload at the 
-time of each completed activity and test — via regression — whether 
-service time follows the predicted inverted-U pattern: moderate 
-workload correlating with faster performance, with degradation at both 
-very low and very high workload.
+Aalst's application of the Yerkes-Dodson Law of Arousal to process mining 
+([BPM 2009 workshop paper](https://doi.org/10.1007/978-3-642-12186-9_8)), 
+this analysis will compute each resource's concurrent workload at the time 
+of each completed activity and test — via regression — whether service time 
+follows the predicted inverted-U pattern: moderate workload correlating with 
+faster performance, with degradation at both very low and very high workload.
 
 **Object-centric process mining** *(higher complexity — "Project 1 v2")*
-Object-centric process mining (OCEL 2.0 conversion + PM4Py's OC-DFG/
-OC-Petri net discovery) is planned as a post-launch extension, to more
-accurately capture the one-to-many relationships (e.g., multiple goods
-receipts and invoices per line item) that this project's core analysis
-simplifies via a single case notion. TU Eindhoven's own graph-based
-object-centric representation of this dataset ([Esser & Fahland, 2021](https://doi.org/10.4121/14169614))
-independently confirms this modeling gap — their object model also
-treats only PO, POItem, Resource, and Vendor as distinct entities.
+Object-centric process mining (OCEL 2.0 conversion + PM4Py's OC-DFG/ 
+OC-Petri net discovery) is planned as a post-launch extension, to more 
+accurately capture the one-to-many relationships (e.g., multiple goods 
+receipts and invoices per line item) that this project's core analysis 
+simplifies via a single case notion. TU Eindhoven's own graph-based 
+object-centric representation of this dataset ([Esser & Fahland, 2021](https://doi.org/10.4121/14169614)) 
+independently confirms this modeling gap — their object model also treats 
+only PO, POItem, Resource, and Vendor as distinct entities.
 
-This extension will explore questions that specifically exploit the
-object-centric view, building directly on the original BPI Challenge's
-own compliance framing:
-- **Object multiplicity vs. delay risk:** for purchase order items with
-  multiple Goods Receipt and Invoice objects (e.g., 12 GRs/invoices for
-  a single rent line item), does the number of related objects
-  correlate with total case duration or deviation severity?
-- **GR–Invoice desynchronization:** at the object level, how long does
-  a specific Invoice object wait for its corresponding Goods Receipt
-  object (or vice versa), and does this gap vary systematically by
-  vendor or subsidiary?
-- **Vendor object-interaction signatures:** can vendors be segmented by
-  their characteristic object-interaction pattern (one-to-one vs.
-  high-multiplicity GR/Invoice relationships), and do higher-multiplicity
+Notebook 3's conformance checking already surfaced direct empirical 
+motivation for this extension: high-multiplicity cases deviate from the 
+de facto model far more than baseline (22.12% vs. 3.84%), yet show *lower* 
+de jure rule violations — indicating these cases are structurally complex 
+(multiple GR/invoice objects) rather than genuinely non-compliant, a 
+distinction a single-case-notion model cannot represent cleanly. This 
+extension will explore questions that specifically exploit the 
+object-centric view, building directly on the original BPI Challenge's own 
+compliance framing:
+
+- **Object multiplicity vs. delay risk:** for purchase order items with 
+  multiple Goods Receipt and Invoice objects (e.g., 12 GRs/invoices for a 
+  single rent line item), does the number of related objects correlate 
+  with total case duration or deviation severity?
+- **GR–Invoice desynchronization:** at the object level, how long does a 
+  specific Invoice object wait for its corresponding Goods Receipt object 
+  (or vice versa), and does this gap vary systematically by vendor or 
+  subsidiary?
+- **Vendor object-interaction signatures:** can vendors be segmented by 
+  their characteristic object-interaction pattern (one-to-one vs. 
+  high-multiplicity GR/Invoice relationships), and do higher-multiplicity 
   vendors show more conformance deviations or invoice-value mismatches?
+
+**Extended Process.Science demonstration** *(low complexity)*
+The core Industry Tool Demonstration (Step 9) is scoped to two Process.Science 
+modules (Variants/Case Analyzer, plus one filtering/drill-down module), 
+directly connecting to this project's own validated findings (7,835 process 
+variants, top 5 covering 48.3% of cases). A fuller replication of 
+[viadee's Power BI process-mining approach](https://www.viadee.de/en/blog/process-mining-mit-power-bi/) 
+— including throughput-vs-frequency and per-activity duration visuals — is 
+planned as a post-deadline enhancement to this demo.
 
 ## Key Findings
 
@@ -215,7 +229,9 @@ invoice-to-payment-process-optimization/
 ├── powerbi/
 │   ├── invoice_dashboard.pbix
 │   └── screenshots/
-│       └── process_science_discovery.png
+│       ├── process_science_variants.png       # core demo (Sept 20 scope)
+│       ├── process_science_dashboard.png      # extended viadee-style demo (post-deadline)
+│       └── de_facto_de_jure_models.png        # from Notebook 3
 │
 ├── reports/
 │   ├── process_mining_findings.md
