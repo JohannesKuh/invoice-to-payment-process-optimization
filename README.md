@@ -27,7 +27,7 @@ This project applies process mining and predictive modeling to a real-world SAP 
 7. Explain model predictions with SHAP
 8. Build a Power BI dashboard for business-facing KPIs, including a native Python-visual embedding of PM4Py directly inside Power BI
 9. Demonstrate the same process discovery step using an industry-standard 
-   commercial tool (Process.Science / Disco) alongside the open-source 
+   commercial tool (Process.Science) alongside the open-source 
    pipeline — prepared via Process.Science's free official "ps4pbi Analyst" 
    academy course, covering Root Cause Analyzer, Variants/Case Analyzer, 
    and other Power BI visual features relevant to this comparison
@@ -95,7 +95,7 @@ Challenge, extended with a predictive layer:
 - **Visualization:** Power BI dashboard for business-facing KPIs, built on model predictions scored offline and exported as a table, including a native
   Python-visual embedding of PM4Py (via [viadee's](https://www.viadee.de/en/blog/process-mining-mit-power-bi/) approach)
 - **Industry Tool Demonstration:** limited demos of Process.Science's free 
-  Power BI visual and Disco (30-day trial), cross-validating the open-source 
+  Power BI visual (30-day trial), cross-validating the open-source 
   pipeline against commercial tools on a filtered data subset. Preparation 
   includes Process.Science's own free "ps4pbi Analyst" course (20 steps, 
   free certificate), covering the visual's Root Cause Analyzer and 
