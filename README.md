@@ -87,45 +87,11 @@ Challenge, extended with a predictive layer:
 
 - **Process Mining:** PM4Py for process discovery (Inductive Miner) and conformance checking against the expected purchase-to-pay flow
 - **Segmented analysis:** where relevant, process discovery, conformance checking, and duration analysis are performed both in aggregate and segmented by item category (the four flow types), vendor, subsidiary, and time period — since aggregate metrics can mask meaningful variation across these dimensions (e.g., a company-wide average duration can look acceptable while masking poor performance concentrated in a few subsidiaries).
--  **Conformance checking:** BPI 2019 does not include a formal, machine-readable reference (de jure) process model. In practice, de jure models originate from artifacts such as internal process handbooks, audit requirements, or regulatory/legal frameworks — none of which are part of this public research dataset, since such governance documentation is typically internal and confidential. Both winning  BPI Challenge 2019 submissions faced this same gap: [Augusto, Leno 
-  & Reissner (2019)](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Student-Submission-1.pdf) constructed as-is/to-be BPMN models but found them too complex for 
-  automated conformance techniques; [Diba, Remy & Pufahl (2019)](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Submission-6.pdf) (overall challenge winners) instead applied rule-based compliance checking. Following this precedent, this project checks conformance against two baselines: (1) a de facto model discovered from the log's dominant behavior, and (2) a lightweight de jure reference encoding the four-flow-type description shared by both prior submissions — the same textual specification already used in this project's Business Problem section.
-- **Machine Learning:** delay-prediction model (scikit-learn), tuned via Optuna, tracked in MLflow
-- **Explainability:** SHAP for global and individual-case feature importance, complemented by a dtreeviz visualization of a representative decision tree for structural interpretability
-- **Visualization:** Power BI dashboard for business-facing KPIs, built on model predictions scored offline and exported as a table, including a native
-  Python-visual embedding of PM4Py (via [viadee's](https://www.viadee.de/en/blog/process-mining-mit-power-bi/) approach)
-- **Industry Tool Demonstration:** limited demos of Process.Science's free 
-  Power BI visual (30-day trial), cross-validating the open-source 
-  pipeline against commercial tools on a filtered data subset. Preparation 
-  includes Process.Science's own free "ps4pbi Analyst" course (20 steps, 
-  free certificate), covering the visual's Root Cause Analyzer and 
-  Variants/Case Analyzer features directly relevant to this comparison.
-- **Stretch goals:** R-based performance spectrum analysis ([psmineR](https://cran.r-project.org/web/packages/psmineR/index.html)); side-by-side comparison of free Power BI process-mining visuals
-- **Stretch goal Object-centric process mining:** BPI 2019's case 
-  notion (purchase document + item) flattens what is actually a 
-  multi-object process (Purchase Order, Item, Goods Receipt, Invoice). 
-  A future extension could convert the event log to OCEL 2.0 format 
-  and apply PM4Py's object-centric discovery (OC-DFG, OC-Petri nets) 
-  to more accurately capture one-to-many relationships that the 
-  traditional single-case-notion analysis in this project simplifies.
-- **(Stretch goal) Social network analysis:** PM4Py's native 
-  organizational mining functions (`discover_handover_of_work_network`, 
-  `discover_working_together_network`) applied to the log's 627 
-  resources, to explore who handovers concentrate around and whether 
-  central resources correspond to process bottlenecks. Network 
-  centrality alone shows frequency of connection, not speed — so this 
-  is cross-referenced against Step 4's duration/throughput data before 
-  drawing any bottleneck conclusions, rather than inferred from the 
-  network visualization alone.
+- **Conformance checking:** BPI 2019 does not include a formal, machine-readable reference (de jure) process model. In practice, de jure models originate from artifacts such as internal process handbooks, audit requirements, or regulatory/legal frameworks — none of which are part of this public research dataset, since such governance documentation is typically internal and confidential. Both winning BPI Challenge 2019 submissions faced this same gap: [Augusto, Leno & Reissner (2019)](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Student-Submission-1.pdf) constructed as-is/to-be BPMN models but found them too complex for automated conformance techniques; [Diba, Remy & Pufahl (2019)](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Submission-6.pdf) (overall challenge winners) instead applied rule-based compliance checking. Following this precedent, this project checks conformance against two baselines: (1) a de facto model discovered from the log's dominant behavior, and (2) a lightweight de jure reference encoding the four-flow-type description shared by both prior submissions — the same textual specification already used in this project's Business Problem section.
+- **Machine Learning:** two predictive analyses — (1) case-level throughput prediction (XGBoost, Optuna-tuned, tracked in MLflow), cross-validated against [Rząd et al. (2019)](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Submission-2.pdf); and (2) vendor Award tier prediction, using separate models for existing vendors (Logistic Regression, Decision Tree) and new/thin-history vendors (Optuna-tuned Random Forest)
+- **Explainability:** SHAP for global and individual-case feature importance, complemented by a dtreeviz visualization of a representative decision tree for structural interpretability, applied to both champion models
 
-  **Note:** TU Eindhoven has published an official graph-based object-centric 
-representation of this dataset ([Event Graph of BPI Challenge 2019](https://doi.org/10.4121/14169614), 
-Esser & Fahland, 2021), modeling PO, POItem, Resource, and Vendor as 
-distinct entities. Consistent with that work, this project's OCEL 
-conversion also treats Goods Receipt and Invoice as derived (rather 
-than natively identified) entities, since neither the original XES 
-export nor TU/e's own graph model include distinct document IDs for 
-individual goods receipts or invoices.
+*See [Planned Extensions](#planned-extensions) for stretch goals, including the Power BI dashboard, Process.Science integration, object-centric process mining (OCPM), and social network analysis.*
 
 ## Planned Extensions
 These extensions are committed and will be completed — the open question is 
