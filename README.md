@@ -34,6 +34,18 @@ This project applies process mining and predictive modeling to a real-world SAP 
 10. (Optional, time-permitting) Performance spectrum analysis using R's psmineR package
 11. (Optional, time-permitting) Side-by-side comparison of free Power BI process-mining visuals (Process.Science, Microsoft's native Power Automate Process Mining visual)
 
+## Overview
+Process mining and machine learning applied to a SAP procurement data set of a large multinational company headquartered in the Netherlands, operating in the coatings and paints sector, containing 1,595,923 events across 251,734 cases ([BPI Challenge 2019](https://icpmconference.org/2019/icpm-2019/contests-challenges/bpi-challenge-2019/)).
+
+**Key steps:**
+1. Load and clean the BPI 2019 event log (Notebook 1)
+2. Process discovery — discover the as-is process with PM4Py (Notebook 2)
+3. Conformance checking — identify deviations from the ideal process flow (Notebook 3)
+4. Process enhancement — bottleneck and delay analysis using timestamp data (Notebook 4)
+5. Feature engineering for delay and vendor-reliability prediction (Notebook 5)
+6. Train and tune two predictive models — case-level throughput prediction (Part 1) and vendor Award tier prediction for existing and new vendors (Part 2, Models A & B) — using scikit-learn, XGBoost, and Optuna, tracked with Weights & Biases (W&B) (Notebook 6)
+7. Explain model predictions with SHAP and dtreeviz (Notebook 7)
+
 ## Business Problem
 
 The dataset originates from the [BPI Challenge 2019](https://icpmconference.org/2019/icpm-2019/contests-challenges/bpi-challenge-2019/): 
