@@ -1,6 +1,6 @@
-# Invoice-to-Payment Process Optimization & Delay Prediction
+# Invoice-to-Payment Process Optimization: Throughput & Vendor Prediction
 
-Process mining and machine learning applied to a SAP procurement data set of a large multinational company headquartered in the Netherlands containing 1,595,923 events across 251,734 cases ([BPI Challenge 2019](https://icpmconference.org/2019/icpm-2019/contests-challenges/bpi-challenge-2019/)) — combining process mining (PM4Py) and ML (scikit-learn, etc.) to discover processes, analyze throughput, check conformance and predict througput and vendor performance.
+Process mining and machine learning applied to a SAP procurement dataset of a large multinational company headquartered in the Netherlands, containing 1,595,923 events across 251,734 cases ([BPI Challenge 2019](https://icpmconference.org/2019/icpm-2019/contests-challenges/bpi-challenge-2019/)) — combining process mining (PM4Py) and machine learning (scikit-learn, XGBoost) to discover processes, analyze throughput, check conformance and predict vendor performance.
 
 ## Executive Summary
 - Analyzed [N] procurement cases from the BPI 2019 SAP event log using process mining and machine learning
@@ -28,14 +28,14 @@ This project applies process mining and predictive modeling to a real-world SAP 
 ## Business Problem
 
 The dataset originates from the [BPI Challenge 2019](https://icpmconference.org/2019/icpm-2019/contests-challenges/bpi-challenge-2019/): 
-a large multinational company headquartered in the Netherlands, operating in the coatings and paints industry across 60 subsidiaries, submitted its purchase order handling process for investigation. The process owner's motivation was **compliance** — understanding not just how the process runs on average, but where and how severely it deviates from expectation.
+a large multinational company headquartered in the Netherlands, operating in the coatings and paints industry across 60 subsidiaries, submitted its purchase order handling process for investigation. The process owner's motivation was **compliance** — understanding not just how the process runs, but also where and how severely it deviates from expectation.
 
 This project follows the three original questions posed by the BPI Challenge, extended with a predictive layer:
 
 1. **Process discovery:** Is there a collection of process models that together properly describe the process captured in this data? (The challenge itself identifies at least four underlying flow types — 3-way matching with GR-based invoicing, 3-way matching without, 2-way matching and consignment.)
 2. **Throughput analysis (enhancement):** What is the throughput of the invoicing process — the time between goods receipt, invoice receipt and payment (invoice clearing) — including matching the correct goods receipts to invoices when a single line item has several of each?
 3. **Conformance and deviation:** Which purchase documents stand out from the log, where do they deviate from the discovered process models and how severe are these deviations — both in terms of process flow and invoice values (e.g. vendors producing disproportionate rework due to invoice errors)?
-4. **Prediction (this project's extension):** Based on the findings in sections 1-3, three predictive models were developed addressing delay (Delay Prediction Model) and vendor's performance (Vendor Award Prediction):
+4. **Prediction (this project's extension):** Based on the findings in sections 1-3, three predictive models were developed addressing throughput and vendors' performance:
    - Part 1 — Case-Level Throughput Prediction: How long will a specific case take to clear?
    - Part 2 — Vendor Award Prediction: How reliable is an existing vendor (Model A; vendor-level) or a new vendor (Model B; order-level)? 
 
