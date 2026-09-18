@@ -46,140 +46,78 @@ This project follows the three original questions posed by the BPI Challenge, ex
 - **License:** CC BY 4.0 (dataset) — separate from this repository's MIT license, which covers code only. Citation: van Dongen, B.F., *BPI Challenge 2019*. 4TU.ResearchData.
 - **Format:** IEEE XES standard, read natively via `pm4py.read_xes()`
 - **Scope:** 1,595,923 events across 251,734 cases (case ID = purchase document + item), spanning 76,349 purchase documents, 42 activities and 627 users (607 human, 20 batch/automated) — covering purchase orders submitted in 2018 across 60 subsidiaries
-- **Key attributes:** case ID, activity, timestamp, resource (user), purchasing document ID, item type, item category (3-way with/without GR-based invoicing, 2-way, consignment), vendor, company (subsidiary), spend classification text, GR-based invoice verification flag, goods receipt flag
-- **Note:** the raw `.xes` file is not committed to this repository due to its size — see the link above to download it directly. `data/raw/` is excluded via `.gitignore`.
+- **Key attributes:** Case ID, activity, timestamp, resource (user), purchasing document ID, item type, item category (3-way with/without GR-based invoicing, 2-way, consignment), vendor, company (subsidiary), spend classification text, GR-based invoice verification flag, goods receipt flag
+- **Note:** The raw `.xes` file is not committed to this repository due to its size — see the link above to download it directly. `data/raw/` is excluded via `.gitignore`.
 
 ## Approach
 
-- **Process Mining:** PM4Py for process discovery (Inductive Miner) and conformance checking against the expected purchase-to-pay flow
-- **Segmented analysis:** where relevant, process discovery, conformance checking, and duration analysis are performed both in aggregate and segmented by item category (the four flow types), vendor, subsidiary, and time period — since aggregate metrics can mask meaningful variation across these dimensions (e.g., a company-wide average duration can look acceptable while masking poor performance concentrated in a few subsidiaries).
-- **Conformance checking:** BPI 2019 does not include a formal, machine-readable reference (de jure) process model. In practice, de jure models originate from artifacts such as internal process handbooks, audit requirements, or regulatory/legal frameworks — none of which are part of this public research dataset, since such governance documentation is typically internal and confidential. Both winning BPI Challenge 2019 submissions faced this same gap: [Augusto, Leno & Reissner (2019)](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Student-Submission-1.pdf) constructed as-is/to-be BPMN models but found them too complex for automated conformance techniques; [Diba, Remy & Pufahl (2019)](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Submission-6.pdf) (overall challenge winners) instead applied rule-based compliance checking. Following this precedent, this project checks conformance against two baselines: (1) a de facto model discovered from the log's dominant behavior, and (2) a lightweight de jure reference encoding the four-flow-type description shared by both prior submissions — the same textual specification already used in this project's Business Problem section.
-- **Machine Learning:** two predictive analyses — (1) case-level throughput prediction (XGBoost, Optuna-tuned, tracked in MLflow), cross-validated against [Rząd et al. (2019)](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Submission-2.pdf); and (2) vendor Award tier prediction, using separate models for existing vendors (Logistic Regression, Decision Tree) and new/thin-history vendors (Optuna-tuned Random Forest)
-- **Explainability:** SHAP for global and individual-case feature importance, complemented by a dtreeviz visualization of a representative decision tree for structural interpretability, applied to both champion models
-
-*See [Planned Extensions](#planned-extensions) for stretch goals, including the Power BI dashboard, Process.Science integration, object-centric process mining (OCPM), and social network analysis.*
+- **Process Mining:** PM4Py for process discovery (Inductive Miner) and
+  conformance checking against the expected purchase-to-pay flow
+- **Segmented analysis:** Where relevant, process discovery, conformance
+  checking, and duration analysis are performed both in aggregate and
+  segmented by item category (the four flow types), vendor, subsidiary
+  and time period — since aggregate metrics can mask meaningful variation
+  across these dimensions (e.g. a company-wide average duration can look
+  acceptable while masking poor performance concentrated in a few
+  subsidiaries)
+- **Conformance checking:** BPI 2019 lacks a formal, machine-readable
+  reference (de jure) process model, a known gap also faced by both
+  winning BPI Challenge 2019 submissions
+  ([Augusto, Leno & Reissner, 2019](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Student-Submission-1.pdf);
+  [Diba, Remy & Pufahl, 2019](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Submission-6.pdf)) —
+  this project checks conformance against two baselines instead: (1) a de
+  facto model discovered from the log's dominant behavior and (2) a
+  lightweight de jure reference following the challenge's documented flow
+  (Purchase Order → Goods Receipt → Invoice Receipt → Clear Invoice)
+- **Feature Engineering:** Three feature tables built for two predictive
+  analyses (Notebook 5):
+  - Part 1: target `gr_to_clear_days` (Goods Receipt → Clear Invoice in
+    days, continuous), similar to
+    [Rząd et al. (2019)](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Submission-2.pdf);
+    prediction point restricted to information known as-of-Goods-Receipt
+  - Part 2: target No Award / Bronze / Silver+ (3-class), based on
+    `ir_to_clear_days` (Invoice Receipt → Clear Invoice in days); tiers
+    are adapted from the UK's
+    [Fair Payment Code](https://www.smallbusinesscommissioner.gov.uk/fpc/code-criteria/),
+    with the Silver tier's small-business sub-criterion replaced by a
+    stricter 90%-within-30-days threshold, and Silver merged with Gold
+    into Silver+ to resolve a small-sample problem
+- **Machine Learning:** Two predictive analyses (Notebook 6) — Part 1:
+  case-level throughput prediction (champion model: XGBoost,
+  Optuna-tuned, tracked in W&B), cross-validated against
+  [Rząd et al. (2019)](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Submission-2.pdf);
+  and Part 2: vendor Award tier prediction, using separate models for
+  existing vendors (Logistic Regression, Decision Tree, both logged on
+  W&B) and new/thin-history vendors (champion model: Optuna-tuned Random
+  Forest, logged on W&B)
+- **Explainability:** SHAP for global and individual-case feature
+  importance, complemented by a dtreeviz visualization of a
+  representative decision tree for structural interpretability, applied
+  to both champion models
 
 ## Planned Extensions
-These extensions are committed and will be completed — the open question is 
-timing, not whether. They are deliberately decoupled from the September 20, 
-2026 deadline so they don't compete with the core pipeline under time pressure.
 
-**Social network analysis** *(lower complexity — likely first)*
-PM4Py's native handover-of-work and working-together networks, analyzing 
-resource collaboration patterns across the 627 users in the log, 
-cross-referenced with duration data from Step 4 to distinguish genuine 
-bottlenecks from high-throughput specialists.
+These extensions are committed and will be completed — the open question
+is timing, not whether. They are deliberately decoupled from the
+September 20, 2026 deadline so they do not compete with the core pipeline
+under time pressure.
 
-*Extension: workload vs. service time.* Building on Nakatumba & van der 
-Aalst's application of the Yerkes-Dodson Law of Arousal to process mining 
-([BPM 2009 workshop paper](https://doi.org/10.1007/978-3-642-12186-9_8)), 
-this analysis will compute each resource's concurrent workload at the time 
-of each completed activity and test — via regression — whether service time 
-follows the predicted inverted-U pattern: moderate workload correlating with 
-faster performance, with degradation at both very low and very high workload.
+- **Social network analysis** — resource collaboration patterns via
+  PM4Py's handover-of-work and working-together networks, cross-referenced
+  with duration data to distinguish genuine bottlenecks from
+  high-throughput specialists
+- **Object-centric process mining** — OCEL 2.0 conversion and PM4Py's
+  object-centric discovery, to more accurately capture the one-to-many
+  relationships (e.g., multiple goods receipts/invoices per line item)
+  that this project's single-case-notion analysis simplifies
+- **Power BI Dashboard & Process.Science Integration** — a three-dashboard
+  Power BI application (Process Overview, Vendor & Spend, Rework &
+  Bottlenecks) incorporating this project's model predictions, alongside a
+  demonstration of Process.Science's commercial process-mining visual
 
-**Object-centric process mining** *(higher complexity — "Project 1 v2")*
-Object-centric process mining (OCEL 2.0 conversion + PM4Py's OC-DFG/ 
-OC-Petri net discovery) is planned as a post-launch extension, to more 
-accurately capture the one-to-many relationships (e.g., multiple goods 
-receipts and invoices per line item) that this project's core analysis 
-simplifies via a single case notion. TU Eindhoven's own graph-based 
-object-centric representation of this dataset ([Esser & Fahland, 2021](https://doi.org/10.4121/14169614)) 
-independently confirms this modeling gap — their object model also treats 
-only PO, POItem, Resource, and Vendor as distinct entities.
-
-Notebook 3's conformance checking already surfaced direct empirical 
-motivation for this extension: high-multiplicity cases deviate from the 
-de facto model far more than baseline (22.12% vs. 3.84%), yet show *lower* 
-de jure rule violations — indicating these cases are structurally complex 
-(multiple GR/invoice objects) rather than genuinely non-compliant, a 
-distinction a single-case-notion model cannot represent cleanly. This 
-extension will explore questions that specifically exploit the 
-object-centric view, building directly on the original BPI Challenge's own 
-compliance framing:
-
-- **Object multiplicity vs. delay risk:** for purchase order items with 
-  multiple Goods Receipt and Invoice objects (e.g., 12 GRs/invoices for a 
-  single rent line item), does the number of related objects correlate 
-  with total case duration or deviation severity?
-- **GR–Invoice desynchronization:** at the object level, how long does a 
-  specific Invoice object wait for its corresponding Goods Receipt object 
-  (or vice versa), and does this gap vary systematically by vendor or 
-  subsidiary?
-- **Vendor object-interaction signatures:** can vendors be segmented by 
-  their characteristic object-interaction pattern (one-to-one vs. 
-  high-multiplicity GR/Invoice relationships), and do higher-multiplicity 
-  vendors show more conformance deviations or invoice-value mismatches?
-
-**Extended Process.Science demonstration** *(low complexity)*
-The core Industry Tool Demonstration (Step 9) is scoped to two Process.Science 
-modules (Variants/Case Analyzer, plus one filtering/drill-down module), 
-directly connecting to this project's own validated findings (7,835 process 
-variants, top 5 covering 48.3% of cases). A fuller replication of 
-[viadee's Power BI process-mining approach](https://www.viadee.de/en/blog/process-mining-mit-power-bi/) 
-— including throughput-vs-frequency and per-activity duration visuals — is 
-planned as a post-deadline enhancement to this demo.
-
-### Power BI Dashboard & Process.Science Integration (stretch)
-
-**Planned structure**, informed by two independent precedents also built on 
-this dataset or a closely related process-mining Power BI use case:
-
-- **Dashboard 1 — Process Overview**: invoicing-type shares by net worth and 
-  case count, throughput timeline, document/item type breakdowns 
-  (extends 4.2). Adds a predicted-vs-actual panel from Notebook 6's test-set 
-  results, plus a filterable view of currently open cases flagged by 
-  `predicted_gr_to_clear_days` — surfacing which in-progress orders are 
-  likely to run long
-- **Dashboard 2 — Vendor & Spend**: vendor importance, spend area analysis, 
-  vendor tier ratings (extends 4.5.2, 5.1). Adds Model A/B's predicted 
-  Award tiers for thin-history vendors, shown alongside actual computed 
-  tiers where available
-- **Dashboard 3 — Rework & Bottlenecks**: rework activity ratios, 
-  responsible vendors/users, duration impact (extends 4.3) — purely 
-  descriptive, no model output feeds this dashboard
-
-This structure mirrors the dashboard layout used by 
-[Rząd, Wojnecka, Rutkowski & Guliński (2019)](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Submission-2.pdf), 
-who built a Power BI application on this same dataset.
-
-**Data model:** a single flat, enriched event log (case ID, activity, 
-timestamp, plus case-level attributes) feeds the process-mining visual, 
-alongside the existing case-level and vendor-level feature/summary tables 
-already built in this project for the KPI dashboards. No formal star schema 
-is used — this follows the approach taken by both 
-[viadee](https://www.viadee.de/en/blog/process-mining-mit-power-bi/) and 
-Rząd et al., who each built directly from flat/pivoted event-log tables in 
-Power Query rather than a dimensional model. [Process.Science's](https://www.process-science.com/solutions/procurement) 
-own documented input requirements confirm the same pattern: transaction 
-data enriched with case-level metadata (vendor, category, spend area), not 
-a dimensional schema.
-
-**Predictive analytics integration (Notebook 6):** model outputs are 
-exported as simple additions to the existing tables, not new architecture:
-
-- Part 1's scored predictions for unfinished cases (`predicted_gr_to_clear_days`), 
-  joined onto the case-level table
-- Part 1's model performance summary (RMSE/MAE/R² per model), as a small 
-  reference table supporting a "how trustworthy is this estimate" panel
-- Part 2 Model A's predicted tiers for the 1,222 "Insufficient Data" 
-  vendors, joined onto the vendor-level table
-- Part 2 Model B's predicted tiers per transaction (order-level attributes 
-  only), for new or thin-history vendors
-
-**SHAP explainability (Notebook 7, planned):** global and individual-case 
-feature importance from the champion models is a natural further extension 
-— a "why was this prediction made" panel alongside the predictions above. 
-Not yet built; documented here as a planned addition once Notebook 7 is 
-complete, rather than part of the current stretch scope.
-
-**Process.Science integration**: the free Power BI visual (30-day trial) 
-requires only Case ID, Activity, and Timestamp — compatible directly with 
-the project's existing `event_log_p2p` structure. Notably, Process.Science's 
-own use-case documentation independently names "maverick buying — invoices 
-before orders are placed" as a detected pattern, corroborating the framing 
-already cited from van Dyk, Kennes, Aklecha & Ramezani (2019) in Notebooks 
-3 and 4.
+*See [`docs/planned-extensions.md`](docs/planned-extensions.md) for
+detailed methodology, specific research questions, and citations for each
+extension.*
 
 ## Key Findings — Core Analysis
 
