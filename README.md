@@ -1,6 +1,6 @@
 # Invoice-to-Payment Process Optimization & Delay Prediction
 
-Process mining and machine learning applied to a SAP procurement data set of a large multinational company headquartered in the Netherlands containing 1,595,923 events across 251,734 cases ([BPI Challenge 2019](https://icpmconference.org/2019/icpm-2019/contests-challenges/bpi-challenge-2019/)) — combining PM4Py, scikit-learn, and Power BI to discover processes, analyze throughput, check conformance and predict delays or deviations.
+Process mining and machine learning applied to a SAP procurement data set of a large multinational company headquartered in the Netherlands containing 1,595,923 events across 251,734 cases ([BPI Challenge 2019](https://icpmconference.org/2019/icpm-2019/contests-challenges/bpi-challenge-2019/)) — combining process mining (PM4Py) and ML (scikit-learn, etc.) to discover processes, analyze throughput, check conformance and predict througput and vendor performance.
 
 ## Executive Summary
 - Analyzed [N] procurement cases from the BPI 2019 SAP event log using process mining and machine learning
@@ -191,7 +191,7 @@ already cited from van Dyk, Kennes, Aklecha & Ramezani (2019) in Notebooks
 
 ## Tools & Technologies
 
-PM4Py · scikit-learn · Optuna · MLflow · SHAP · dtreeviz · Power BI (incl. native Python visual integration) · Process.Science (Power BI visual) · Disco · psmineR (R, stretch goal) · Power Automate Process Mining visual (stretch goal) · Claude (Anthropic)
+PM4Py · scikit-learn · Optuna · W&B · SHAP · dtreeviz · Power BI (incl. native Python visual integration) · Process.Science (Power BI visual) · Disco · psmineR (R, stretch goal) · Power Automate Process Mining visual (stretch goal) · Claude (Anthropic)
 
 ## Repository Structure
 
