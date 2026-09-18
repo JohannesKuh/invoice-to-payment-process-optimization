@@ -121,6 +121,18 @@ extension.*
 
 ## Key Findings — Core Analysis
 
+De facto vs. de jure model comparison (Approach/Conformance section)
+XGBoost predicted-vs-actual scatter plot (Key Findings, Part 1)
+Model B's confusion matrix (Key Findings, Part 2)
+Model B's multi-class SHAP summary bar chart (Key Findings or a brief Explainability mention)
+(optional, if you still want one more) Part 1's SHAP summary, for symmetry between the two parts
+
+![SHAP feature importance, Model B](images/07_shap_dtreeviz_explainability/model_b_shap_summary.png)
+*Figure: SHAP confirms `spend_classification_NPR` and `order_value` as 
+the dominant drivers of vendor tier predictions, consistently across all 
+three award tiers — independently validating the model's built-in feature 
+importance ranking.*
+
 *(To be completed once analysis is finished.)*
 
 ## Business Recommendations
