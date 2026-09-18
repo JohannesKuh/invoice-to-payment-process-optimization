@@ -150,11 +150,25 @@ invoice-to-payment-process-optimization/
 │   └── 07_shap_dtreeviz_explainability.ipynb
 │
 ├── images/
-│   ├── model_b_confusion_matrix.png
-│   ├── part1_predicted_vs_actual.png
-│   ├── model_b_shap_summary.png
-│   ├── dtreeviz_model_b.png
-│   └── process_discovery_segmented.png
+│   ├── 02_process_discovery/
+│   │   ├── petri_net_3way_before_gr.png
+│   │   └── petri_net_3way_before_gr_no_srm.png
+│   ├── 03_conformance_checking/
+│   │   ├── de_facto_model.png
+│   │   └── de_jure_model.png
+│   ├── 04_process_enhancement/
+│   │   └── activity_bottleneck_by_theme.png
+│   ├── 06_throughput_and_vendor_prediction/
+│   │   ├── part1_predicted_vs_actual.png
+│   │   ├── part1_xgboost_feature_importance.png
+│   │   ├── model_a_confusion_matrices.png
+│   │   ├── model_b_confusion_matrix.png
+│   │   └── model_b_feature_importance.png
+│   └── 07_shap_dtreeviz_explainability/
+│       ├── part1_shap_summary.png
+│       ├── part1_dtreeviz.png
+│       ├── model_b_shap_summary.png
+│       └── model_b_dtreeviz.png
 │
 └── docs/
     └── planned-extensions.md
