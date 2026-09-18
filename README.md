@@ -16,7 +16,7 @@ Process mining and machine learning applied to a SAP procurement data set of a l
 
 This project applies process mining and predictive modeling to a real-world SAP procurement event log, covering the full pipeline from process discovery to a deployable prediction tool. The analysis follows the three classical process mining stages — **process discovery**, **conformance checking**, and **process enhancement** — and finally extends enhancement into predictive process monitoring using machine learning.
 
-## Key Steps
+### Key Steps
 
 1. Load and clean the BPI 2019 event log (pandas)
 2. Process discovery — discover the as-is process with PM4Py (Inductive Miner)
@@ -215,9 +215,13 @@ before orders are placed" as a detected pattern, corroborating the framing
 already cited from van Dyk, Kennes, Aklecha & Ramezani (2019) in Notebooks 
 3 and 4.
 
-## Key Findings
+## Key Findings — Core Analysis
 
 *(To be completed once analysis is finished.)*
+
+## Business Recommendations
+
+## Limitations & Further Research
 
 ## Tools & Technologies
 
