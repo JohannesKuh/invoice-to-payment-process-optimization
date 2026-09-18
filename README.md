@@ -137,43 +137,27 @@ PM4Py · scikit-learn · Optuna · W&B · SHAP · dtreeviz · Power BI (incl. na
 invoice-to-payment-process-optimization/
 │
 ├── README.md
-├── LICENSE                          # MIT (code only — see Dataset section for data license)
-├── requirements.txt
+├── LICENSE
 ├── .gitignore
-│
-├── data/
-│   └── BPI Challenge 2019_Data/     # both raw and processed files together
-│       ├── BPI_Challenge_2019.xes         # raw file (linked, not committed — see Dataset section)
-│       └── BPI_2019_cleaned.parquet       # cleaned output from Notebook 1
 │
 ├── notebooks/
 │   ├── 01_data_loading_cleaning.ipynb
-│   ├── 02_process_discovery.ipynb        # Inductive Miner, process map
-│   ├── 03_conformance_checking.ipynb     # deviations, de facto vs. de jure
-│   ├── 04_process_enhancement.ipynb      # bottlenecks, throughput, variants
-│   ├── 05_feature_engineering.ipynb      # case duration, delay labels, etc.
-│   ├── 06_delay_prediction_model.ipynb   # scikit-learn + Optuna tuning
-│   └── 07_shap_explainability.ipynb
+│   ├── 02_process_discovery.ipynb
+│   ├── 03_conformance_checking.ipynb
+│   ├── 04_process_enhancement.ipynb
+│   ├── 05_feature_engineering.ipynb
+│   ├── 06_throughput_and_vendor_prediction.ipynb
+│   └── 07_shap_dtreeviz_explainability.ipynb
 │
-├── extensions/                      # Planned Extensions (see README section below) —
-│   │                                 # committed, but not deadline-bound; not part of
-│   │                                 # the numbered core sequence above
-│   ├── social_network_analysis.ipynb
-│   └── ocpm_extension.ipynb
-│
-├── powerbi/
-│   ├── invoice_dashboard.pbix
-│   └── screenshots/
-│       ├── process_science_variants.png       # core demo (Sept 20 scope)
-│       ├── process_science_dashboard.png      # extended viadee-style demo (post-deadline)
-│       └── de_facto_de_jure_models.png        # from Notebook 3
-│
-├── reports/
-│   ├── process_mining_findings.md
-│   └── model_performance_summary.md
+├── images/
+│   ├── model_b_confusion_matrix.png
+│   ├── part1_predicted_vs_actual.png
+│   ├── model_b_shap_summary.png
+│   ├── dtreeviz_model_b.png
+│   └── process_discovery_segmented.png
 │
 └── docs/
-    └── architecture_diagram.png      # PM4Py → ML → Power BI flow
+    └── planned-extensions.md
 ```
 
 ## Acknowledgements
