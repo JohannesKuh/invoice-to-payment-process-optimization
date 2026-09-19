@@ -356,40 +356,30 @@ closer look.
 
 ## Limitations & Further Research
 
-### Methodological Decisions
-- Prediction-point discipline (as-of-GR for Part 1) — a stricter standard
-  than prior work ([Rząd et al. (2019)](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Submission-2.pdf)), excluding some potentially predictive
-  signals to avoid hindsight leakage
-- Vendor-grouped splitting — necessary to prevent leakage, but costs
-  fine-grained class-balance control
-- Award tier simplification (Silver+Gold merge) — resolved Model A's
-  small-sample problem, though Model B's larger scale might support
-  keeping them separate
+*See Notebook 6, Section 6.6 for the full discussion of each point below.*
 
-### Known Limitations
-- Silver+ remains difficult to predict across every model tested — likely
-  a genuine data limitation, not a fixable modeling gap
-- Model scope: only 4 mainstream models tested per part; LightGBM/CatBoost
-  considered but not included given time constraints and observed
-  performance plateau
-- Model B's predictions rest heavily on just two features
-  (`spend_classification_NPR` and `order_value`, 58% combined importance)
-  — the model may be less robust than its aggregate score suggests if
-  either field has data-quality issues in a production setting
+**Methodological trade-offs:** A strict as-of-GR prediction point (Part 1)
+excludes some potentially predictive signals to avoid hindsight leakage;
+vendor-grouped splitting prevents data leakage at the cost of
+fine-grained class-balance control; merging Silver and Gold into Silver+
+resolved a small-sample problem for Model A, though Model B's larger
+scale might support keeping them separate.
 
-### Further Research
-- Part 1's as-of-IR staged extension: a second model predicting time to
-  Clear Invoice once `gr_to_ir_days` is already known (i.e., predicting
-  from Invoice Receipt onward, rather than Goods Receipt) — likely higher
-  predictive power given more information is available at that later
-  checkpoint, but not built in this notebook
-- Keeping Gold/Silver separate for Model B specifically, given its larger
-  sample size
-- Testing LightGBM/CatBoost for a fuller model comparison
-- Investigating whether `sub_spend_area = Labels`'s throughput gap
-  (Part 1) reflects a genuine process bottleneck worth business
-  intervention, or an artifact of how these orders are typically handled
-- OCPM and social network analysis extensions (already noted in README)
+**Known limitations:** Silver+ remains difficult to predict across every
+model tested — likely a genuine data limitation, not a fixable modeling
+gap. Model B's predictions rest heavily on just two features
+(`spend_classification_NPR` and `order_value`, 58% combined importance),
+so its robustness depends on those two fields' ongoing data quality. Only
+four mainstream models were tested per part; LightGBM/CatBoost were
+considered but not included given time constraints.
+
+**Further research:** A staged extension predicting from Invoice Receipt
+onward (once `gr_to_ir_days` is known) could improve on Part 1's current
+as-of-GR model; keeping Gold/Silver separate for Model B specifically;
+testing LightGBM/CatBoost for a fuller comparison; investigating whether
+the `sub_spend_area = Labels` throughput gap reflects a genuine process
+bottleneck or a data artifact. See [Planned Extensions](#planned-extensions)
+for the OCPM and social network analysis extensions.
 
 ## Tools & Technologies
 
