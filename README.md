@@ -349,7 +349,7 @@ distribution across all three award tiers for new or thin-history
 vendors — not just a single label — letting a user judge how much to
 trust each prediction. In practice: **treat predictions with a clear top
 probability (>80–90%) as reliable**; treat a close call between adjacent
-tiers (e.g., Bronze vs. Silver+, probabilities within ~15 percentage
+tiers (e.g. Bronze vs. Silver+, probabilities within ~15 percentage
 points) as "likely better than average, but the exact tier is uncertain"
 — worth a closer manual look rather than an automatic classification.
 
