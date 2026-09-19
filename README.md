@@ -9,7 +9,7 @@ Process mining and machine learning applied to a SAP procurement dataset of a la
   covering 1,595,923 events across 251,734 cases
 - Discovered that a single process model cannot describe this process —
   at least four segmented models are required by item category, since
-  the two dominant flow types ("3-way match, invoice before GR", 77.37% of events, and "3-way match, invoice after GR", 20.00% of events) produce unreadable
+  the two dominant flow types ("3-way match, invoice before GR", 77.37% of events and "3-way match, invoice after GR", 20.00% of events) produce unreadable
   "spaghetti" models even after excluding known sub-populations
 - Found median end-to-end invoice clearing takes **63 days**, driven
   primarily by the Invoice Receipt → Clear Invoice stage (accounting for
@@ -49,7 +49,7 @@ This project applies process mining and predictive modeling to a real-world SAP 
 3. Conformance checking — identify deviations from the ideal process flow (Notebook 3)
 4. Process enhancement — bottleneck and delay analysis using timestamp data (Notebook 4)
 5. Feature engineering for delay and vendor-reliability prediction (Notebook 5)
-6. Train and tune three predictive models — case-level throughput prediction (Part 1) and vendor Award tier prediction for existing and new vendors (Part 2, Models A & B) — using scikit-learn, XGBoost, and Optuna, tracked with Weights & Biases (W&B) (Notebook 6)
+6. Train and tune three predictive models — case-level throughput prediction (Part 1) and vendor Award tier prediction for existing and new vendors (Part 2, Models A & B) — using scikit-learn, XGBoost and Optuna, tracked with Weights & Biases (W&B) (Notebook 6)
 7. Explain model predictions with SHAP and dtreeviz (Notebook 7)
 
 ## Business Problem
@@ -81,7 +81,7 @@ This project follows the three original questions posed by the BPI Challenge, ex
 - **Process Mining:** PM4Py for process discovery (Inductive Miner) and
   conformance checking against the expected purchase-to-pay flow
 - **Segmented analysis:** Where relevant, process discovery, conformance
-  checking, and duration analysis are performed both in aggregate and
+  checking and duration analysis are performed both in aggregate and
   segmented by item category (the four flow types), vendor, subsidiary
   and time period — since aggregate metrics can mask meaningful variation
   across these dimensions (e.g. a company-wide average duration can look
@@ -107,7 +107,7 @@ This project follows the three original questions posed by the BPI Challenge, ex
     are adapted from the UK's
     [Fair Payment Code](https://www.smallbusinesscommissioner.gov.uk/fpc/code-criteria/),
     with the Silver tier's small-business sub-criterion replaced by a
-    stricter 90%-within-30-days threshold, and Silver merged with Gold
+    stricter 90%-within-30-days threshold and Silver merged with Gold
     into Silver+ to resolve a small-sample problem
 - **Machine Learning:** Two predictive analyses (Notebook 6) — Part 1:
   case-level throughput prediction (champion model: XGBoost,
@@ -143,12 +143,12 @@ under time pressure.
   demonstration of Process.Science's commercial process-mining visual
 
 *See [`planned-extensions.md`](planned-extensions.md) for detailed
-methodology, specific research questions, and citations for each
+methodology, specific research questions and citations for each
 extension.*
 
 ## Key Findings — Core Analysis
 
-*For the complete analysis, methodology, and supporting data tables, see
+*For the complete analysis, methodology and supporting data tables, see
 the relevant notebook — section references are noted throughout below.*
 
 **1. Process discovery:** Segmenting by `case:Item Category` reveals the
@@ -180,7 +180,7 @@ total.
 
 *Note on methodology:* throughput is calculated using simplified
 first-occurrence matching — the first Goods Receipt event is matched to
-the first Invoice Receipt event, and so on. The challenge's deeper
+the first Invoice Receipt event and so on. The challenge's deeper
 question — precisely matching *multiple* GR and invoice messages within a
 single line item, where several of each can occur — is deferred to the
 planned Object-Centric Process Mining (OCPM) extension.
@@ -198,13 +198,13 @@ This 63-day aggregate figure masks substantial heterogeneity:
   43 days. Two categories can share the same headline number while having
   entirely different underlying bottlenecks.
 - **By vendor:** Throughput varies over 20x between the fastest and
-  slowest vendors, and *where* the delay occurs also differs by vendor —
+  slowest vendors and *where* the delay occurs also differs by vendor —
   e.g., `vendor_0135` is the single fastest vendor at the GR→IR stage
   (2 days) but the *slowest* overall (111 days end-to-end), since its
   entire delay concentrates in the later IR→Clear stage. A vendor that
   looks fast at one checkpoint can still be the worst performer overall.
 - **By activity:** Excluding SRM cases, five recurring patterns emerged
-  among the top 20 transitions by occurrence, and the longest-duration
+  among the top 20 transitions by occurrence and the longest-duration
   transitions among pairs occurring at least 50 times (186 of 383 pairs).
   The core process flow confirms "Record Invoice Receipt" → "Clear
   Invoice" (133,595 occurrences, median 36.19 days) as the single primary
@@ -215,12 +215,12 @@ This 63-day aggregate figure masks substantial heterogeneity:
 
 *Figure 2: Five recurring patterns emerge across the process's top
 transitions — approval-related delays, the core process flow, a
-deviation cluster, a payment-block sub-flow, and repetitive self-loop
+deviation cluster, a payment-block sub-flow and repetitive self-loop
 activities — mapping directly onto where and why cases actually slow
 down.*
 
 **3. Conformance and deviation:** Conformance depends heavily on the reference model and level of
-aggregation used — de facto, de jure, vendor, and document views each
+aggregation used — de facto, de jure, vendor and document views each
 surface different, complementary insights (Notebook 3). Two of the three
 findings below compare directly against the de jure model shown here;
 document-level deviation is assessed against the de facto model instead.
@@ -237,7 +237,7 @@ reference model.*
   items), yet only 1 of the top 10 deviating documents also appears among
   the top 10 largest overall — confirming document-specific factors, not
   size, drive these deviations.
-- **Where are deviations, and how severe?** An unfiltered de facto model
+- **Where are deviations and how severe?** An unfiltered de facto model
   shows 99.6% fitness, while the documented de jure policy shows only 67%
   — each flow type genuinely needs its own reference model.
   Cross-referencing deviator groups against de jure rules reveals **two
@@ -275,8 +275,8 @@ Based on these findings, three models were developed predicting throughput
 
 - **Part 1 — Case-Level Throughput Prediction:** The **champion model
   tuned XGBoost** achieves RMSE 20.05 days (R² 0.574) on the test set,
-  outperforming Linear Regression, Decision Tree, and Random Forest
-  baselines, and cross-validated against
+  outperforming Linear Regression, Decision Tree and Random Forest
+  baselines and cross-validated against
   [Rząd et al. (2019)](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Submission-2.pdf).
   A prior study's top-cited predictor was found to rely on information
   not actually knowable at this project's stricter, genuinely
@@ -307,7 +307,7 @@ entirely between adjacent tiers — a coherent, ordered sense of vendor
 reliability, even where exact boundaries remain uncertain.*
 
 **SHAP & dtreeviz Explainability (Notebook 7):** Three independent
-methods (built-in feature importance, SHAP, and tree structure)
+methods (built-in feature importance, SHAP and tree structure)
 consistently agree on each model's dominant drivers — `vendor_tier_No
 Award` and `sub_spend_area_Labels` for Part 1; `spend_classification_NPR`
 and `order_value` for Model B — providing strong evidence that these
@@ -470,7 +470,7 @@ invoice-to-payment-process-optimization/
   [Process Mining: Data Science in Action](https://www.coursera.org/account/accomplishments/verify/XHZJ9LTUM18L)
   certificate 🎓 (TU Eindhoven via Coursera)
 - AI assistance provided by Claude (Anthropic) for code guidance,
-  interpretation refinement, and documentation support
+  interpretation refinement and documentation support
 
 ## License
 
