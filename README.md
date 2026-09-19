@@ -245,10 +245,96 @@ given their scale.
 ![Activity-Level Bottleneck Analysis by Theme](images/04_process_enhancement/activity_bottleneck_by_theme.png)
 *Figure 3: The following five patterns emerge when analyzing the top 20 transitions by occurrence and the longest-duration transitions among pairs occurring at least 50 times: Approval-related delays, Core process flow, Deviation cluster, Payment-block sub-flow, Repetitive activities (self-loop).*
 
-3. **Conformance and deviation:** Which purchase documents stand out from the log, where do they deviate from the discovered process models and how severe are these deviations — both in terms of process flow and invoice values (e.g. vendors producing disproportionate rework due to invoice errors)?
+### 3. **Conformance and deviation:** Which purchase documents stand out from the log, where do they deviate from the discovered process models and how severe are these deviations — both in terms of process flow and invoice values (e.g. vendors producing disproportionate rework due to invoice errors)?
 
+**1. Which purchase documents stand out?**
+- Purchase documents show **sharp, size-independent deviation
+  concentration**: several documents show 97-100% of their line items
+  deviating (e.g., `4507021416`: 172/172 items, 100%) — a pattern
+  independently reported by another BPI Challenge 2019 team
+  ([van Dyk, Kennes, Aklecha & Ramezani (2019)](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Submission-3.pdf),
+  who found a document with 84 items and a 100% rework rate).
+- Purchase documents follow an even more extreme long tail than vendors
+  (max: 429 items); only 1 of the top 10 deviating documents also appears
+  among the top 10 largest overall — confirming document-specific factors,
+  not size, drive these deviations.
 
-4. **Prediction (this project's extension):** 
+**2. Where are deviations, and how severe are they?**
+- The **unfiltered de facto model** has a fitting rate of 99.60% — a
+  nearly perfect match, confirming that Inductive Miner without noise
+  filtering absorbs even rare behavior directly into the model.
+- The **filtered de facto model** (`noise_threshold=0.2`) has a more
+  informative fitting score of 96.16%, surfacing 8,486 deviating cases
+  (3.84%) (see figure 4).
+- The **de jure model** — comprising only the documented core sequence
+  (PO Item → GR → Invoice Receipt → Clear Invoice) — shows just 66.96% of
+  cases fitting exactly, meaning 33.04% deviate from the officially
+  documented policy. Each flow type requires its own reference model,
+  consistent with the challenge's Question 1 (see figure 5).
+
+| Model | Average fitness | Perfectly fit cases |
+|---|---|---|
+| De facto (unfiltered) | 0.9999 | 99.60% |
+| De facto (filtered, 0.2) | 0.9960 | 96.16% |
+| De jure (documented policy) | 0.9020 | 66.96% |
+
+- Response-rule violation rates increase in the **baseline process
+  (3-way match, invoice before GR)** along the de jure sequence (6.58% →
+  10.94% → 13.16%), partly explained by the "snapshots challenge"
+  (in-progress cases at the data cutoff).
+- Applying the de jure model to **"invoice after GR"** reveals a similar
+  but distinct pattern (4.24% → 23.46% → 13.08%).
+- Cross-referencing **all de facto deviators** and the **high-multiplicity
+  deviators** against de jure rules shows two striking patterns:
+  - violations are nearly 5x higher among all deviators versus baseline
+    (13.16% → 64.00%) — suggesting the final invoice-clearing step is
+    where genuine process friction happens (disputes, manual intervention,
+    blocked payments)
+  - high-multiplicity deviators are the *most* compliant group on every
+    rule — "PO Item → GR" (6.58% baseline → 5.89% all deviators → 1.45%
+    high-multiplicity), "GR → Invoice Receipt" (10.94% → 19.60% → 6.48%),
+    and "Invoice Receipt → Clear Invoice" (13.16% → 64.00% → 7.58%) —
+    indicating high-multiplicity cases deviate due to structural
+    complexity and not non-compliance, motivating the planned OCPM
+    extension
+
+| Model / Group | PO Item → GR | GR → Invoice Receipt | Invoice Receipt → Clear Invoice |
+|---|---|---|---|
+| Baseline (all cases) | 6.58% | 10.94% | 13.16% |
+| "Invoice after GR" flow type | 4.24% | 23.46% | 13.08% |
+| All de facto deviators (8,486) | 5.89% | 19.60% | 64.00% |
+| High-multiplicity deviators (2,349) | 1.45% | 6.48% | 7.58% |
+
+**3. Which vendors produce disproportionate rework?**
+- Among the top 100 vendors by volume (76.6% of cases), **26 unique
+  vendors** appear across the three "top 10 worst" lists, with aggregate
+  violation rates of 24.14% (PO→GR), 37.90% (GR→Invoice), and 24.79%
+  (Invoice→Clear) — all substantially above baseline.
+- `vendorID_0282` stands out with a 100% violation rate on invoice
+  clearing (277/277 cases), confirmed genuine (not a truncation artifact).
+- The two highest-volume vendors overall (`vendorID_0136`, `vendorID_0120`,
+  13,000+ cases each) show only moderate violation rates (2.97-23.23% and
+  1.79-20.54%) — indicating business volume does not drive violation rates; the worst rates concentrate among mid-sized vendors.
+
+**On invoice values:** checking whether goods receipt values match invoice
+values was not feasible with the available data (`Cumulative net worth` is
+fixed per case in 99.7% of cases), but **higher-value cases do deviate
+somewhat more often**.
+
+**In conclusion**, conformance findings depend heavily on the reference
+model and level of aggregation used — de facto, de jure, vendor, and
+document views each surface different, complementary insights.
+Document-specific factors driving deviation remain unexplained by
+structural, vendor-wide, or complexity-related patterns — a candidate for
+further investigation in the planned OCPM extension.
+
+![De facto model](images/03_conformance_checking/de_facto_model.png)
+*Figure 4: Filtered de facto model (noise_threshold=0.2) with a slightly lower fitting score of 96.16%.*
+
+![De jure model](images/03_conformance_checking/de_jure_model.png)
+*Figure 5: De jure model — comprising only the documented core sequence (PO Item → GR → Invoice Receipt → Clear Invoice) — shows that just 66.96% of all cases fitting exactly, meaning 33.04% of cases deviating from the officially documented policy.*
+
+### 4. **Prediction (this project's extension):** 
 
 De facto vs. de jure model comparison (Approach/Conformance section)
 XGBoost predicted-vs-actual scatter plot (Key Findings, Part 1)
