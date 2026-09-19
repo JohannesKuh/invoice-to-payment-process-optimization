@@ -41,7 +41,7 @@ Process mining and machine learning applied to a SAP procurement dataset of a la
 
 ## Project Overview
 
-This project applies process mining and predictive modeling to a real-world SAP procurement event log provided by [BPI Challenge 2019](https://icpmconference.org/2019/icpm-2019/contests-challenges/bpi-challenge-2019/), covering the full pipeline from process discovery to a deployable prediction tool. The analysis follows the three classical process mining stages — **process discovery**, **conformance checking**, and **process enhancement** — and finally extends enhancement into predictive process monitoring using machine learning.
+This project applies process mining and predictive modeling to a real-world SAP procurement event log provided by [BPI Challenge 2019](https://icpmconference.org/2019/icpm-2019/contests-challenges/bpi-challenge-2019/), covering the full pipeline from process discovery to a deployable prediction tool. The analysis follows the three classical process mining stages — **process discovery**, **conformance checking** and **process enhancement** — and finally extends enhancement into predictive process monitoring using machine learning.
 
 **Key steps:**
 1. Load and clean the BPI 2019 event log (Notebook 1)
