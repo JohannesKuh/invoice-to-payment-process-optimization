@@ -142,8 +142,8 @@ under time pressure.
   Bottlenecks) incorporating this project's model predictions, alongside a
   demonstration of Process.Science's commercial process-mining visual
 
-*See [`docs/planned-extensions.md`](docs/planned-extensions.md) for
-detailed methodology, specific research questions, and citations for each
+*See [`planned-extensions.md`](planned-extensions.md) for detailed
+methodology, specific research questions, and citations for each
 extension.*
 
 ## Key Findings — Core Analysis
@@ -414,7 +414,7 @@ for the OCPM and social network analysis extensions.
 Weights & Biases · SHAP · dtreeviz · joblib
 
 **Planned for future extensions** (see [Planned Extensions](#planned-extensions)
-and [`docs/planned-extensions.md`](docs/planned-extensions.md)): Power BI
+and [`planned-extensions.md`](planned-extensions.md)): Power BI
 (incl. native Python visual integration) · Process.Science (Power BI
 visual)
 
