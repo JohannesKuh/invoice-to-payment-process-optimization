@@ -49,7 +49,7 @@ This project applies process mining and predictive modeling to a real-world SAP 
 3. Conformance checking — identify deviations from the ideal process flow (Notebook 3)
 4. Process enhancement — bottleneck and delay analysis using timestamp data (Notebook 4)
 5. Feature engineering for delay and vendor-reliability prediction (Notebook 5)
-6. Train and tune two predictive models — case-level throughput prediction (Part 1) and vendor Award tier prediction for existing and new vendors (Part 2, Models A & B) — using scikit-learn, XGBoost, and Optuna, tracked with Weights & Biases (W&B) (Notebook 6)
+6. Train and tune three predictive models — case-level throughput prediction (Part 1) and vendor Award tier prediction for existing and new vendors (Part 2, Models A & B) — using scikit-learn, XGBoost, and Optuna, tracked with Weights & Biases (W&B) (Notebook 6)
 7. Explain model predictions with SHAP and dtreeviz (Notebook 7)
 
 ## Business Problem
