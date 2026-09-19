@@ -121,6 +121,135 @@ extension.*
 
 ## Key Findings — Core Analysis
 
+The key findings are ordered along the three original questions posed by the BPI Challenge, followed by the prediction insights:
+
+### 1. **Process discovery:** Is there a collection of process models that together properly describe the process captured in this data?
+
+- Process discovery on the **full event log** leads to a highly
+   **complex "spaghetti" model** (see `full_log_discovery.png`),
+   confirming BPI 2019's known complexity (four flow types, an SRM
+   sub-variant, and high-multiplicity GR/invoice cases identified in
+   Notebook 1)
+- A subsequent **segmented discovery** by `case:Item Category` (4 flow
+   types, 77.37%/20.00%/2.26%/0.37%) reveals that the two dominant
+   categories (97.37% of events combined) produce hard-to-read
+   **spaghetti models** (see figures 1-2), while the two smaller categories (2.63%
+   combined) lead to **cleaner, interpretable ones** — revealing the main
+   cause is probably the high-multiplicity GR/invoice pattern found in
+   Notebook 1, which is concentrated in the larger categories
+- An analysis of known **sub-populations** showed that **excluding SRM
+   cases** from the two 3-way match categories reduced case counts only
+   modestly (-0.4% and -4.0% respectively). The process models remained
+   visually complex, showing **"spaghetti"-like structures** —
+   **SRM cases are not the main cause of model complexity**
+- This segmentation directly answers the challenge's suggestion that
+   which model best explains a **purchase item should be determined by the
+   item's own properties: `case:Item Category`** — a genuine property of
+   each item — is precisely the field used to determine which of the
+   four discovered models applies to it
+
+**Overall,** a **collection of (at least) four process models** — segmented by item
+category, as the challenge itself suggests — is needed to properly
+describe the process, since a single unsegmented model produces an
+unreadable "spaghetti" result.
+
+![Main flow: 3-way match, invoice before GR — excluding SRM](images/02_process_discovery/petri_net_3way_before_gr.png)
+*Figure 1: "3-way match, invoice before GR" (77.37% of events): Clear "spaghetti" illustration of BPI 2019's known complexity, with dense parallel/looping structures in the middle.*
+
+![Main flow: petri_net_3way_before_gr_no_srm](images/02_process_discovery/petri_net_3way_before_gr_no_srm.png)
+*Figure 2: "3-way match, invoice before GR — excluding SRM" Excluding SRM cases from the two 3-way match categories removed a small number of cases (before GR: 221,010 → 220,181, -0.4%; after GR: 15,182 → 14,571, -4.0%), but the resulting process models remained visually complex, similar to the originals.*
+
+### 2. **Throughput analysis (enhancement):** What is the throughput of the invoicing process — the time between goods receipt, invoice receipt and payment (invoice clearing) — including matching the correct goods receipts to invoices when a single line item has several of each?
+
+**Case-level throughput:** The overall throughput (median) across all cases with a valid delta is:
+
+- **GR → Invoice Receipt:** 9.14 days (n = 210,370)
+- **Invoice Receipt → Clear Invoice:** 42.05 days (n = 183,293)
+- **GR → Clear Invoice (end-to-end):** 63.00 days (n = 182,808)
+
+The **main driver of end-to-end throughput** is **Invoice Receipt → Clear Invoice** (42.05 days), representing roughly two-thirds of the median total (see 4.2.3 for methodology).
+
+*Note on methodology:* Throughput is calculated using simplified
+first-occurrence matching (see 4.2.2); the challenge's deeper question —
+matching multiple GR/invoice messages within a line item — is deferred to the
+planned OCPM extension.
+
+**Event ordering:** Within "3-way match, invoice after GR" (11,128 cases),
+0.00% show a negative delta — goods receipt precedes invoice receipt with no
+exceptions. Within the **dominant category** (199,242 cases), 8.21% show a
+**negative delta (invoice receipt before goods receipt)** — a finding worth
+further investigation, as it may point to a conformance issue rather than
+expected process variation.
+
+**Activity-level bottlenecks:** Excluding SRM cases, five patterns emerged
+among the top 20 transitions by occurrence and the longest-duration
+transitions among pairs occurring at least 50 times (186 of 383 pairs, see
+figure 3).
+
+**Throughput by category:** A segmentation by `case:Item Category` reveals
+substantial heterogeneity:
+
+<table>
+<thead>
+<tr>
+<th>case:Item Category</th>
+<th colspan="3">gr_to_ir_days</th>
+<th colspan="3">ir_to_clear_days</th>
+<th colspan="3">gr_to_clear_days</th>
+</tr>
+<tr>
+<th></th>
+<th>count</th><th>median</th><th>mean</th>
+<th>count</th><th>median</th><th>mean</th>
+<th>count</th><th>median</th><th>mean</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>2-way match</td><td>0</td><td>–</td><td>–</td><td>303</td><td>5.21</td><td>9.76</td><td>0</td><td>–</td><td>–</td></tr>
+<tr><td>3-way match, invoice after GR</td><td>11,128</td><td>26.04</td><td>36.83</td><td>9,674</td><td>26.32</td><td>33.18</td><td>9,675</td><td>63.30</td><td>64.38</td></tr>
+<tr><td>3-way match, invoice before GR (dominant)</td><td>199,242</td><td>8.82</td><td>17.70</td><td>173,316</td><td>42.92</td><td>49.05</td><td>173,133</td><td>62.97</td><td>65.84</td></tr>
+<tr><td>Consignment</td><td>0</td><td>–</td><td>–</td><td>0</td><td>–</td><td>–</td><td>0</td><td>–</td><td>–</td></tr>
+</tbody>
+</table>
+
+Both 3-way match categories converge on a similar end-to-end duration
+(~63 days) despite very different internal splits — "invoice after GR"
+front-loads its delay into GR→IR (26.04 days), while the dominant category's delay concentrates in IR→Clear (42.92 days).
+
+**Variant diversity:** The dominant category ("3-way match, invoice before
+GR") includes 7,835 unique process variants (221,010 cases, 4.4.1's
+SRM-included scope) but shows the lowest variant density of all four
+categories (3.5% variants/case, 4.4.2's SRM-excluded scope). In contrast,
+"invoice after GR" and "2-way match" show the highest density (27.1% /
+14.8%) despite the smallest case shares.
+
+**Throughput by vendor:** This analysis followed two distinct approaches
+leading to different results. **Top-15-by-volume** (36.3% of all cases)
+shows `vendor_0135` (1.96 days) and `vendor_0104` (2.21 days) as the
+**fastest** (also the #1 and #3 vendors by volume), and `vendor_0126`
+(44.02 days) and `vendor_0194` (40.41 days) as the **slowest** — both over
+20x slower than the fastest. **Top/bottom-15-by-median-throughput** (≥30
+cases, to avoid small-sample noise) shows `vendor_0906` (38 cases, 9.05
+days) and `vendor_0604` (157 cases, 9.08 days) as **fastest**, and
+`vendor_1039` (32 cases, median 180 days) and `vendor_0615` (36 cases,
+median 134 days) as **slowest**. As a result, vendor-level process
+friction varies significantly between the fastest and slowest vendors,
+and stage also matters — `vendor_0135` is fastest at GR→IR but slowest
+overall (111.15 days GR→Clear), since its delay concentrates entirely in
+the IR→Clear stage (105.97 days). A direct comparison could help clarify
+what drives these large differences. Lastly, `vendor_0135` and
+`vendor_0119` need close monitoring as they represent 11.1% of all cases
+and both take over 100 days to clear — a significant business impact
+given their scale.
+
+![Activity-Level Bottleneck Analysis by Theme](images/04_process_enhancement/activity_bottleneck_by_theme.png)
+*Figure 3: The following five patterns emerge when analyzing the top 20 transitions by occurrence and the longest-duration transitions among pairs occurring at least 50 times: Approval-related delays, Core process flow, Deviation cluster, Payment-block sub-flow, Repetitive activities (self-loop).*
+
+3. **Conformance and deviation:** Which purchase documents stand out from the log, where do they deviate from the discovered process models and how severe are these deviations — both in terms of process flow and invoice values (e.g. vendors producing disproportionate rework due to invoice errors)?
+
+
+4. **Prediction (this project's extension):** 
+
 De facto vs. de jure model comparison (Approach/Conformance section)
 XGBoost predicted-vs-actual scatter plot (Key Findings, Part 1)
 Model B's confusion matrix (Key Findings, Part 2)
