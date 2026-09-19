@@ -3,14 +3,42 @@
 Process mining and machine learning applied to a SAP procurement dataset of a large multinational company headquartered in the Netherlands, containing 1,595,923 events across 251,734 cases ([BPI Challenge 2019](https://icpmconference.org/2019/icpm-2019/contests-challenges/bpi-challenge-2019/)) — combining process mining (PM4Py) and machine learning (scikit-learn, XGBoost) to discover processes, analyze throughput, check conformance and predict vendor performance.
 
 ## Executive Summary
-- Analyzed [N] procurement cases from the BPI 2019 SAP event log using process mining and machine learning
-- Discovered the as-is process with PM4Py (Inductive Miner) and identified [N] major bottlenecks/deviations through conformance checking
-- Built a delay-prediction model ([algorithm], tuned with Optuna) achieving [F1 / precision / recall] on the test set
-- Top predictors of delay: [feature 1], [feature 2], [feature 3] — explained via SHAP for individual-case transparency
-- Practical use case: procurement teams can use the model's predictions and SHAP explanations to identify at-risk invoices early and prioritize intervention
-- Business impact: reducing [specific bottleneck] could cut average case duration by [X] days, directly improving on-time payment rates and early-payment discount capture
 
-*(Numbers above to be filled in once analysis is complete — this structure keeps the summary review-ready throughout the project.)*
+- Applied process mining and predictive modeling to a real SAP procurement
+  event log from a multinational company ([BPI Challenge 2019](https://icpmconference.org/2019/icpm-2019/contests-challenges/bpi-challenge-2019/)),
+  covering 1,595,923 events across 251,734 cases
+- Discovered that a single process model cannot describe this process —
+  at least four segmented models are required by item category, since
+  the two dominant flow types ("3-way match, invoice before GR", 77.37% of events, and "3-way match, invoice after GR", 20.00% of events) produce unreadable
+  "spaghetti" models even after excluding known sub-populations
+- Found median end-to-end invoice clearing takes **63 days**, driven
+  primarily by the Invoice Receipt → Clear Invoice stage (accounting for
+  roughly two-thirds of the median total), with throughput varying over
+  **20x** between the fastest and slowest vendors
+- Trained and tuned three predictive models: Case-level throughput
+  prediction (champion: tuned XGBoost, RMSE = 20.05 days, R² = 0.574,
+  Part 1) and vendor reliability classification (No Award / Bronze /
+  Silver+) for existing and new vendors (Part 2, Models A and B; Model
+  B's champion: Random Forest, cross-validated macro F1 = 0.729), both
+  cross-validated against independent published BPI submissions
+- Model verification with SHAP & dtreeviz: Analysis independently
+  confirmed the feature importance of each champion model (Part 1: tuned
+  XGBoost, Part 2, Model B: Random Forest) — for example,
+  `spend_classification_NPR` and `order_value` account for 58% of Model
+  B's total feature importance — three independent explainability
+  methods providing strong evidence of the discovered patterns
+- Business recommendations: Applying the tuned XGBoost throughput model
+  (Part 1) to open cases identifies poor-performing vendor groups
+  needing closer attention (e.g. "Insufficient Data" vendors, ~106 days
+  to clear on average); applying Model B's champion Random Forest to
+  vendor-tier prediction demonstrates confident, correct predictions
+  (>99% top probability) in clear-cut cases, while also revealing when a
+  prediction is a genuine close call that should be manually verified
+  rather than used for automatic classification
+- Business impact: Since over 60% of total procurement value results from
+  operational efforts, according to [Bain & Company (2022)](https://www.bain.com/insights/how-to-succeed-in-procurement-in-2022/), combining process mining and machine learning helps identify real
+  operational deficiencies — e.g. complex process flows, poor vendor
+  performance — and predict them early, enabling active management decisions to improve overall procurement outcomes
 
 ## Project Overview
 
@@ -126,8 +154,8 @@ the relevant notebook — section references are noted throughout below.*
 
 **1. Process discovery:** Segmenting by `case:Item Category` reveals the
 root cause of BPI 2019's known complexity — the two dominant flow types,
-**Process 1 ("3-way match, invoice before GR," 77.37% of events)** and
-**Process 2 ("3-way match, invoice after GR," 20.00% of events)**, together
+**Process 1 ("3-way match, invoice before GR", 77.37% of events)** and
+**Process 2 ("3-way match, invoice after GR", 20.00% of events)**, together
 account for 97.4% of all activity yet produce unreadable "spaghetti"
 models even after excluding known sub-populations like SRM cases, while
 the two smaller categories are clean and interpretable. This confirms the
