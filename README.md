@@ -411,7 +411,7 @@ for the OCPM and social network analysis extensions.
 ## Tools & Technologies
 
 **Used in this project:** PM4Py · scikit-learn · XGBoost · Optuna ·
-Weights & Biases · SHAP · dtreeviz · joblib
+Weights & Biases · SHAP · dtreeviz · joblib · Claude (Anthropic)
 
 **Planned for future extensions** (see [Planned Extensions](#planned-extensions)
 and [`planned-extensions.md`](planned-extensions.md)): Power BI
