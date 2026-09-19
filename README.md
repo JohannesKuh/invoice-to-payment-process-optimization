@@ -463,14 +463,21 @@ invoice-to-payment-process-optimization/
 
 ## Acknowledgements
 
-- Dataset provided ...
-- Certificate: ... 🎓 (TU/e/Coursera)
-- AI assistance provided by Claude (Anthropic) for code guidance, 
-  interpretation refinement and documentation support
+- Dataset provided by [BPI Challenge 2019](https://icpmconference.org/2019/icpm-2019/contests-challenges/bpi-challenge-2019/)
+  as the 9th International Business Process Intelligence Challenge (see
+  the [Dataset](#dataset) section for details)
+- This project was completed as a self-guided capstone following the
+  [Process Mining: Data Science in Action](https://www.coursera.org/account/accomplishments/verify/XHZJ9LTUM18L)
+  certificate 🎓 (TU Eindhoven via Coursera)
+- AI assistance provided by Claude (Anthropic) for code guidance,
+  interpretation refinement, and documentation support
 
 ## License
 
-This project is licensed under the MIT License — see [LICENSE](LICENSE) for details. Note: the MIT license applies to the code in this repository only. The BPI 2019 dataset is governed by its own license from the 4TU Data Repository.
+This project is licensed under the MIT License — see [LICENSE](LICENSE)
+for details. Note: the MIT license applies to the code in this repository
+only. The BPI 2019 dataset is governed by its own license from the 4TU
+Data Repository.
 
 ## Author
 
