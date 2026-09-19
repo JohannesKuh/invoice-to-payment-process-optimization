@@ -5,7 +5,7 @@ Process mining and machine learning applied to a SAP procurement dataset of a la
 ## Executive Summary
 
 - Applied process mining and predictive modeling to a real SAP procurement
-  event log from a multinational company ([BPI Challenge 2019](https://icpmconference.org/2019/icpm-2019/contests-challenges/bpi-challenge-2019/)),
+  event log from a multinational company (BPI Challenge 2019),
   covering 1,595,923 events across 251,734 cases
 - Discovered that a single process model cannot describe this process —
   at least four segmented models are required by item category, since
@@ -13,9 +13,8 @@ Process mining and machine learning applied to a SAP procurement dataset of a la
   "spaghetti" models even after excluding known sub-populations
 - Found median end-to-end invoice clearing takes **63 days**, driven
   primarily by the Invoice Receipt → Clear Invoice stage (accounting for
-  roughly two-thirds of the median total), with throughput varying over
-  **20x** between the fastest and slowest vendors
-- Trained and tuned three predictive models: Case-level throughput
+  roughly two-thirds of the median total), with throughput varying mainly by category, activity and vendors (e.g. throughput time between the fastest and slowest vendors varies **20x**, requiring a targeted process improvement analysis)
+- Trained and tuned **three predictive models**: Case-level throughput
   prediction (champion: tuned XGBoost, RMSE = 20.05 days, R² = 0.574,
   Part 1) and vendor reliability classification (No Award / Bronze /
   Silver+) for existing and new vendors (Part 2, Models A and B; Model
