@@ -210,17 +210,16 @@ reference model.*
   items), yet only 1 of the top 10 deviating documents also appears among
   the top 10 largest overall — confirming document-specific factors, not
   size, drive these deviations.
-
 - **Where are deviations, and how severe?** An unfiltered de facto model
   shows 99.6% fitness, while the documented de jure policy shows only 67%
   — each flow type genuinely needs its own reference model.
-  Cross-referencing deviator groups against de jure rules reveals two
-  striking, counterintuitive patterns: violations are nearly 5x higher
+  Cross-referencing deviator groups against de jure rules reveals **two
+  striking, counterintuitive patterns**: violations are nearly 5x higher
   among general deviators versus baseline at the final invoice-clearing
   step — suggesting this is where genuine process friction happens
   (disputes, manual intervention, blocked payments) — while
-  **high-multiplicity deviators are the *most* compliant group on every
-  single rule**, well below baseline — indicating these cases deviate due
+  high-multiplicity deviators are the *most* compliant group on every
+  single rule, well below baseline — indicating these cases deviate due
   to structural complexity (multiple GR/invoice objects per case), not
   genuine non-compliance. A single-case-notion model cannot represent
   this distinction cleanly, directly motivating the planned OCPM
@@ -234,7 +233,7 @@ reference model.*
 
 - **Which vendors produce disproportionate rework?** Among the top 100
   vendors by volume, 26 unique vendors appear across the three "worst 10"
-  lists, with violation rates (24-38%) substantially above baseline.
+  lists, with violation rates (24-38%) substantially above baseline. For instance,
   `vendorID_0282` shows a genuine 100% violation rate on invoice clearing
   (277/277 cases). Notably, the two highest-volume vendors overall
   (`vendorID_0136`, `vendorID_0120`, 13,000+ cases each) show only
