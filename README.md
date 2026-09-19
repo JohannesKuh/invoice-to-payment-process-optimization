@@ -410,7 +410,13 @@ for the OCPM and social network analysis extensions.
 
 ## Tools & Technologies
 
-PM4Py · scikit-learn · Optuna · W&B · SHAP · dtreeviz · Power BI (incl. native Python visual integration) · Process.Science (Power BI visual) · Disco · psmineR (R, stretch goal) · Power Automate Process Mining visual (stretch goal) · Claude (Anthropic)
+**Used in this project:** PM4Py · scikit-learn · XGBoost · Optuna ·
+Weights & Biases · SHAP · dtreeviz · joblib
+
+**Planned for future extensions** (see [Planned Extensions](#planned-extensions)
+and [`docs/planned-extensions.md`](docs/planned-extensions.md)): Power BI
+(incl. native Python visual integration) · Process.Science (Power BI
+visual)
 
 ## Repository Structure
 
@@ -442,7 +448,7 @@ invoice-to-payment-process-optimization/
 │   ├── 06_throughput_and_vendor_prediction/
 │   │   ├── part1_predicted_vs_actual.png
 │   │   ├── part1_xgboost_feature_importance.png
-│   │   ├── model_a_confusion_matrices.png
+│   │   ├── model_a_confusion_matrices_full_dataset.png
 │   │   ├── model_b_confusion_matrix.png
 │   │   └── model_b_feature_importance.png
 │   └── 07_shap_dtreeviz_explainability/
