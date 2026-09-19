@@ -411,7 +411,7 @@ for the OCPM and social network analysis extensions.
 ## Tools & Technologies
 
 **Used in this project:** PM4Py · scikit-learn · XGBoost · Optuna ·
-Weights & Biases · SHAP · dtreeviz · joblib · Claude (Anthropic)
+Weights & Biases · SHAP · dtreeviz · joblib
 
 **Planned for future extensions** (see [Planned Extensions](#planned-extensions)
 and [`planned-extensions.md`](planned-extensions.md)): Power BI
@@ -426,6 +426,7 @@ invoice-to-payment-process-optimization/
 ├── README.md
 ├── LICENSE
 ├── .gitignore
+├── planned-extensions.md
 │
 ├── notebooks/
 │   ├── 01_data_loading_cleaning.ipynb
@@ -436,29 +437,26 @@ invoice-to-payment-process-optimization/
 │   ├── 06_throughput_and_vendor_prediction.ipynb
 │   └── 07_shap_dtreeviz_explainability.ipynb
 │
-├── images/
-│   ├── 02_process_discovery/
-│   │   ├── petri_net_3way_before_gr.png
-│   │   └── petri_net_3way_before_gr_no_srm.png
-│   ├── 03_conformance_checking/
-│   │   ├── de_facto_model.png
-│   │   └── de_jure_model.png
-│   ├── 04_process_enhancement/
-│   │   └── activity_bottleneck_by_theme.png
-│   ├── 06_throughput_and_vendor_prediction/
-│   │   ├── part1_predicted_vs_actual.png
-│   │   ├── part1_xgboost_feature_importance.png
-│   │   ├── model_a_confusion_matrices_full_dataset.png
-│   │   ├── model_b_confusion_matrix.png
-│   │   └── model_b_feature_importance.png
-│   └── 07_shap_dtreeviz_explainability/
-│       ├── part1_shap_summary.png
-│       ├── part1_dtreeviz.png
-│       ├── model_b_shap_summary.png
-│       └── model_b_dtreeviz.png
-│
-└── docs/
-    └── planned-extensions.md
+└── images/
+    ├── 02_process_discovery/
+    │   ├── petri_net_3way_before_gr.png
+    │   └── petri_net_3way_before_gr_no_srm.png
+    ├── 03_conformance_checking/
+    │   ├── de_facto_model.png
+    │   └── de_jure_model.png
+    ├── 04_process_enhancement/
+    │   └── activity_bottleneck_by_theme.png
+    ├── 06_throughput_and_vendor_prediction/
+    │   ├── part1_predicted_vs_actual.png
+    │   ├── part1_xgboost_feature_importance.png
+    │   ├── model_a_confusion_matrices_full_dataset.png
+    │   ├── model_b_confusion_matrix.png
+    │   └── model_b_feature_importance.png
+    └── 07_shap_dtreeviz_explainability/
+        ├── part1_shap_summary.png
+        ├── dtreeviz_part1.png
+        ├── model_b_shap_summary.png
+        └── dtreeviz_part2.png
 ```
 
 ## Acknowledgements
