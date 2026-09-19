@@ -121,392 +121,185 @@ extension.*
 
 ## Key Findings — Core Analysis
 
-The key findings are ordered along the three original questions posed by the BPI Challenge, followed by the prediction insights:
+*For the complete analysis, methodology, and supporting data tables, see
+the relevant notebook — section references are noted throughout below.*
 
-### 1. **Process discovery:** Is there a collection of process models that together properly describe the process captured in this data?
+**1. Process discovery:** Segmenting by `case:Item Category` reveals the
+root cause of BPI 2019's known complexity — the two dominant flow types,
+**Process 1 ("3-way match, invoice before GR," 77.37% of events)** and
+**Process 2 ("3-way match, invoice after GR," 20.00% of events)**, together
+account for 97.4% of all activity yet produce unreadable "spaghetti"
+models even after excluding known sub-populations like SRM cases, while
+the two smaller categories are clean and interpretable. This confirms the
+challenge's own suggestion that item properties should determine which of
+(at least) four required models applies (Notebook 2).
 
-- Process discovery on the **full event log** leads to a highly
-   **complex "spaghetti" model** (see `full_log_discovery.png`),
-   confirming BPI 2019's known complexity (four flow types, an SRM
-   sub-variant, and high-multiplicity GR/invoice cases identified in
-   Notebook 1)
-- A subsequent **segmented discovery** by `case:Item Category` (4 flow
-   types, 77.37%/20.00%/2.26%/0.37%) reveals that the two dominant
-   categories (97.37% of events combined) produce hard-to-read
-   **spaghetti models** (see figures 1-2), while the two smaller categories (2.63%
-   combined) lead to **cleaner, interpretable ones** — revealing the main
-   cause is probably the high-multiplicity GR/invoice pattern found in
-   Notebook 1, which is concentrated in the larger categories
-- An analysis of known **sub-populations** showed that **excluding SRM
-   cases** from the two 3-way match categories reduced case counts only
-   modestly (-0.4% and -4.0% respectively). The process models remained
-   visually complex, showing **"spaghetti"-like structures** —
-   **SRM cases are not the main cause of model complexity**
-- This segmentation directly answers the challenge's suggestion that
-   which model best explains a **purchase item should be determined by the
-   item's own properties: `case:Item Category`** — a genuine property of
-   each item — is precisely the field used to determine which of the
-   four discovered models applies to it
+![3-way match, invoice before GR](images/02_process_discovery/petri_net_3way_before_gr.png)
 
-**Overall,** a **collection of (at least) four process models** — segmented by item
-category, as the challenge itself suggests — is needed to properly
-describe the process, since a single unsegmented model produces an
-unreadable "spaghetti" result.
+*Figure 1: The dominant flow type (77% of events) produces an unreadable
+"spaghetti" model — visual confirmation that a single unsegmented model
+cannot describe this process.*
 
-![Main flow: 3-way match, invoice before GR — excluding SRM](images/02_process_discovery/petri_net_3way_before_gr.png)
-
-*Figure 1: "3-way match, invoice before GR" (77.37% of events): Clear "spaghetti" illustration of BPI 2019's known complexity, with dense parallel/looping structures in the middle.*
-
-![Main flow: petri_net_3way_before_gr_no_srm](images/02_process_discovery/petri_net_3way_before_gr_no_srm.png)
-
-*Figure 2: "3-way match, invoice before GR — excluding SRM" Excluding SRM cases from the two 3-way match categories removed a small number of cases (before GR: 221,010 → 220,181, -0.4%; after GR: 15,182 → 14,571, -4.0%), but the resulting process models remained visually complex, similar to the originals.*
-
-### 2. **Throughput analysis (enhancement):** What is the throughput of the invoicing process — the time between goods receipt, invoice receipt and payment (invoice clearing) — including matching the correct goods receipts to invoices when a single line item has several of each?
-
-**Case-level throughput:** The overall throughput (median) across all cases with a valid delta is:
+**2. Throughput analysis (enhancement):** The median throughput across each stage of
+the invoicing process is:
 
 - **GR → Invoice Receipt:** 9.14 days (n = 210,370)
 - **Invoice Receipt → Clear Invoice:** 42.05 days (n = 183,293)
 - **GR → Clear Invoice (end-to-end):** 63.00 days (n = 182,808)
 
-The **main driver of end-to-end throughput** is **Invoice Receipt → Clear Invoice** (42.05 days), representing roughly two-thirds of the median total (see 4.2.3 for methodology).
+The **main driver** of end-to-end throughput is the Invoice Receipt →
+Clear Invoice stage, accounting for roughly two-thirds of the median
+total.
 
-*Note on methodology:* Throughput is calculated using simplified
-first-occurrence matching (see 4.2.2); the challenge's deeper question —
-matching multiple GR/invoice messages within a line item — is deferred to the
-planned OCPM extension.
+*Note on methodology:* throughput is calculated using simplified
+first-occurrence matching — the first Goods Receipt event is matched to
+the first Invoice Receipt event, and so on. The challenge's deeper
+question — precisely matching *multiple* GR and invoice messages within a
+single line item, where several of each can occur — is deferred to the
+planned Object-Centric Process Mining (OCPM) extension.
 
-**Event ordering:** Within "3-way match, invoice after GR" (11,128 cases),
-0.00% show a negative delta — goods receipt precedes invoice receipt with no
-exceptions. Within the **dominant category** (199,242 cases), 8.21% show a
-**negative delta (invoice receipt before goods receipt)** — a finding worth
-further investigation, as it may point to a conformance issue rather than
-expected process variation.
+This 63-day aggregate figure masks substantial heterogeneity:
 
-**Activity-level bottlenecks:** Excluding SRM cases, five patterns emerged
-among the top 20 transitions by occurrence and the longest-duration
-transitions among pairs occurring at least 50 times (186 of 383 pairs, see
-figure 3).
-
-**Throughput by category:** A segmentation by `case:Item Category` reveals
-substantial heterogeneity:
-
-<table>
-<thead>
-<tr>
-<th>case:Item Category</th>
-<th colspan="3">gr_to_ir_days</th>
-<th colspan="3">ir_to_clear_days</th>
-<th colspan="3">gr_to_clear_days</th>
-</tr>
-<tr>
-<th></th>
-<th>count</th><th>median</th><th>mean</th>
-<th>count</th><th>median</th><th>mean</th>
-<th>count</th><th>median</th><th>mean</th>
-</tr>
-</thead>
-<tbody>
-<tr><td>2-way match</td><td>0</td><td>–</td><td>–</td><td>303</td><td>5.21</td><td>9.76</td><td>0</td><td>–</td><td>–</td></tr>
-<tr><td>3-way match, invoice after GR</td><td>11,128</td><td>26.04</td><td>36.83</td><td>9,674</td><td>26.32</td><td>33.18</td><td>9,675</td><td>63.30</td><td>64.38</td></tr>
-<tr><td>3-way match, invoice before GR (dominant)</td><td>199,242</td><td>8.82</td><td>17.70</td><td>173,316</td><td>42.92</td><td>49.05</td><td>173,133</td><td>62.97</td><td>65.84</td></tr>
-<tr><td>Consignment</td><td>0</td><td>–</td><td>–</td><td>0</td><td>–</td><td>–</td><td>0</td><td>–</td><td>–</td></tr>
-</tbody>
-</table>
-
-Both 3-way match categories converge on a similar end-to-end duration
-(~63 days) despite very different internal splits — "invoice after GR"
-front-loads its delay into GR→IR (26.04 days), while the dominant category's delay concentrates in IR→Clear (42.92 days).
-
-**Variant diversity:** The dominant category ("3-way match, invoice before
-GR") includes 7,835 unique process variants (221,010 cases, 4.4.1's
-SRM-included scope) but shows the lowest variant density of all four
-categories (3.5% variants/case, 4.4.2's SRM-excluded scope). In contrast,
-"invoice after GR" and "2-way match" show the highest density (27.1% /
-14.8%) despite the smallest case shares.
-
-**Throughput by vendor:** This analysis followed two distinct approaches
-leading to different results. **Top-15-by-volume** (36.3% of all cases)
-shows `vendor_0135` (1.96 days) and `vendor_0104` (2.21 days) as the
-**fastest** (also the #1 and #3 vendors by volume), and `vendor_0126`
-(44.02 days) and `vendor_0194` (40.41 days) as the **slowest** — both over
-20x slower than the fastest. **Top/bottom-15-by-median-throughput** (≥30
-cases, to avoid small-sample noise) shows `vendor_0906` (38 cases, 9.05
-days) and `vendor_0604` (157 cases, 9.08 days) as **fastest**, and
-`vendor_1039` (32 cases, median 180 days) and `vendor_0615` (36 cases,
-median 134 days) as **slowest**. As a result, vendor-level process
-friction varies significantly between the fastest and slowest vendors,
-and stage also matters — `vendor_0135` is fastest at GR→IR but slowest
-overall (111.15 days GR→Clear), since its delay concentrates entirely in
-the IR→Clear stage (105.97 days). A direct comparison could help clarify
-what drives these large differences. Lastly, `vendor_0135` and
-`vendor_0119` need close monitoring as they represent 11.1% of all cases
-and both take over 100 days to clear — a significant business impact
-given their scale.
+- **By category:** Segmenting the three throughput deltas (GR→IR,
+  IR→Clear, GR→Clear) by `case:Item Category` shows the two dominant flow
+  types — **"3-way match, invoice before GR"** (77.4% of events) and
+  **"3-way match, invoice after GR"** (20.0% of events) — converge on a
+  similar ~63-day end-to-end total, but via opposite internal patterns.
+  "Invoice after GR" is *front-loaded* — most of its delay happens early,
+  in the GR→IR stage (26 days) — while "invoice before GR" is
+  *back-loaded*, with GR→IR taking only 9 days but IR→Clear stretching to
+  43 days. Two categories can share the same headline number while having
+  entirely different underlying bottlenecks.
+- **By vendor:** Throughput varies over 20x between the fastest and
+  slowest vendors, and *where* the delay occurs also differs by vendor —
+  e.g., `vendor_0135` is the single fastest vendor at the GR→IR stage
+  (2 days) but the *slowest* overall (111 days end-to-end), since its
+  entire delay concentrates in the later IR→Clear stage. A vendor that
+  looks fast at one checkpoint can still be the worst performer overall.
+- **By activity:** Excluding SRM cases, five recurring patterns emerged
+  among the top 20 transitions by occurrence, and the longest-duration
+  transitions among pairs occurring at least 50 times (186 of 383 pairs).
+  The core process flow confirms "Record Invoice Receipt" → "Clear
+  Invoice" (133,595 occurrences, median 36.19 days) as the single primary
+  bottleneck — direct, activity-level confirmation that IR→Clear is the
+  main driver of end-to-end throughput.
 
 ![Activity-Level Bottleneck Analysis by Theme](images/04_process_enhancement/activity_bottleneck_by_theme.png)
 
-*Figure 3: The following five patterns emerge when analyzing the top 20 transitions by occurrence and the longest-duration transitions among pairs occurring at least 50 times: Approval-related delays, Core process flow, Deviation cluster, Payment-block sub-flow, Repetitive activities (self-loop).*
+*Figure 2: Five recurring patterns emerge across the process's top
+transitions — approval-related delays, the core process flow, a
+deviation cluster, a payment-block sub-flow, and repetitive self-loop
+activities — mapping directly onto where and why cases actually slow
+down.*
 
-### 3. **Conformance and deviation:** Which purchase documents stand out from the log, where do they deviate from the discovered process models and how severe are these deviations — both in terms of process flow and invoice values (e.g. vendors producing disproportionate rework due to invoice errors)?
-
-**1. Which purchase documents stand out?**
-- Purchase documents show **sharp, size-independent deviation
-  concentration**: several documents show 97-100% of their line items
-  deviating (e.g., `4507021416`: 172/172 items, 100%) — a pattern
-  independently reported by another BPI Challenge 2019 team
-  ([van Dyk, Kennes, Aklecha & Ramezani (2019)](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Submission-3.pdf),
-  who found a document with 84 items and a 100% rework rate).
-- Purchase documents follow an even more extreme long tail than vendors
-  (max: 429 items); only 1 of the top 10 deviating documents also appears
-  among the top 10 largest overall — confirming document-specific factors,
-  not size, drive these deviations.
-
-**2. Where are deviations, and how severe are they?**
-- The **unfiltered de facto model** has a fitting rate of 99.60% — a
-  nearly perfect match, confirming that Inductive Miner without noise
-  filtering absorbs even rare behavior directly into the model.
-- The **filtered de facto model** (`noise_threshold=0.2`) has a more
-  informative fitting score of 96.16%, surfacing 8,486 deviating cases
-  (3.84%) (see figure 4).
-- The **de jure model** — comprising only the documented core sequence
-  (PO Item → GR → Invoice Receipt → Clear Invoice) — shows just 66.96% of
-  cases fitting exactly, meaning 33.04% deviate from the officially
-  documented policy. Each flow type requires its own reference model,
-  consistent with the challenge's Question 1 (see figure 5).
-
-| Model | Average fitness | Perfectly fit cases |
-|---|---|---|
-| De facto (unfiltered) | 0.9999 | 99.60% |
-| De facto (filtered, 0.2) | 0.9960 | 96.16% |
-| De jure (documented policy) | 0.9020 | 66.96% |
-
-- Response-rule violation rates increase in the **baseline process
-  (3-way match, invoice before GR)** along the de jure sequence (6.58% →
-  10.94% → 13.16%), partly explained by the "snapshots challenge"
-  (in-progress cases at the data cutoff).
-- Applying the de jure model to **"invoice after GR"** reveals a similar
-  but distinct pattern (4.24% → 23.46% → 13.08%).
-- Cross-referencing **all de facto deviators** and the **high-multiplicity
-  deviators** against de jure rules shows two striking patterns:
-  - violations are nearly 5x higher among all deviators versus baseline
-    (13.16% → 64.00%) — suggesting the final invoice-clearing step is
-    where genuine process friction happens (disputes, manual intervention,
-    blocked payments)
-  - high-multiplicity deviators are the *most* compliant group on every
-    rule — "PO Item → GR" (6.58% baseline → 5.89% all deviators → 1.45%
-    high-multiplicity), "GR → Invoice Receipt" (10.94% → 19.60% → 6.48%),
-    and "Invoice Receipt → Clear Invoice" (13.16% → 64.00% → 7.58%) —
-    indicating high-multiplicity cases deviate due to structural
-    complexity and not non-compliance, motivating the planned OCPM
-    extension
-
-| Model / Group | PO Item → GR | GR → Invoice Receipt | Invoice Receipt → Clear Invoice |
-|---|---|---|---|
-| Baseline (all cases) | 6.58% | 10.94% | 13.16% |
-| "Invoice after GR" flow type | 4.24% | 23.46% | 13.08% |
-| All de facto deviators (8,486) | 5.89% | 19.60% | 64.00% |
-| High-multiplicity deviators (2,349) | 1.45% | 6.48% | 7.58% |
-
-**3. Which vendors produce disproportionate rework?**
-- Among the top 100 vendors by volume (76.6% of cases), **26 unique
-  vendors** appear across the three "top 10 worst" lists, with aggregate
-  violation rates of 24.14% (PO→GR), 37.90% (GR→Invoice), and 24.79%
-  (Invoice→Clear) — all substantially above baseline.
-- `vendorID_0282` stands out with a 100% violation rate on invoice
-  clearing (277/277 cases), confirmed genuine (not a truncation artifact).
-- The two highest-volume vendors overall (`vendorID_0136`, `vendorID_0120`,
-  13,000+ cases each) show only moderate violation rates (2.97-23.23% and
-  1.79-20.54%) — indicating business volume does not drive violation rates; the worst rates concentrate among mid-sized vendors.
-
-**On invoice values:** checking whether goods receipt values match invoice
-values was not feasible with the available data (`Cumulative net worth` is
-fixed per case in 99.7% of cases), but **higher-value cases do deviate
-somewhat more often**.
-
-**In conclusion**, conformance findings depend heavily on the reference
-model and level of aggregation used — de facto, de jure, vendor, and
-document views each surface different, complementary insights.
-Document-specific factors driving deviation remain unexplained by
-structural, vendor-wide, or complexity-related patterns — a candidate for
-further investigation in the planned OCPM extension.
-
-![De facto model](images/03_conformance_checking/de_facto_model.png)
-
-*Figure 4: Filtered de facto model (noise_threshold=0.2) with a slightly lower fitting score of 96.16%.*
+**3. Conformance and deviation:** Conformance depends heavily on the reference model and level of
+aggregation used — de facto, de jure, vendor, and document views each
+surface different, complementary insights (Notebook 3). Two of the three
+findings below compare directly against the de jure model shown here;
+document-level deviation is assessed against the de facto model instead.
 
 ![De jure model](images/03_conformance_checking/de_jure_model.png)
 
-*Figure 5: De jure model — comprising only the documented core sequence (PO Item → GR → Invoice Receipt → Clear Invoice) — shows that just 66.96% of all cases fitting exactly, meaning 33.04% of cases deviating from the officially documented policy.*
+*Figure 3: The de jure model — the documented core sequence — fits only
+67% of cases exactly, confirming that each flow type requires its own
+reference model.*
 
-### 4. **Prediction (this project's extension):** 
+- **Which purchase documents stand out?** Several documents show 97-100%
+  of their line items deviating (e.g. `4507021416`: 172/172 items, 100%).
+  Documents follow an even more extreme long tail than vendors (max: 429
+  items), yet only 1 of the top 10 deviating documents also appears among
+  the top 10 largest overall — confirming document-specific factors, not
+  size, drive these deviations.
 
-**Part 1 - Case-Level Throughput Prediction** predicts `gr_to_clear_days` for
-individual cases, with a strict "as-of-Goods-Receipt" prediction point to
-prevent hindsight leakage:
+- **Where are deviations, and how severe?** An unfiltered de facto model
+  shows 99.6% fitness, while the documented de jure policy shows only 67%
+  — each flow type genuinely needs its own reference model.
+  Cross-referencing deviator groups against de jure rules reveals two
+  striking, counterintuitive patterns: violations are nearly 5x higher
+  among general deviators versus baseline at the final invoice-clearing
+  step — suggesting this is where genuine process friction happens
+  (disputes, manual intervention, blocked payments) — while
+  **high-multiplicity deviators are the *most* compliant group on every
+  single rule**, well below baseline — indicating these cases deviate due
+  to structural complexity (multiple GR/invoice objects per case), not
+  genuine non-compliance. A single-case-notion model cannot represent
+  this distinction cleanly, directly motivating the planned OCPM
+  extension.
 
-- All four baseline models achieved meaningful signal (RMSE 20–25 days,
-  well below the target's ~30-day standard deviation); **XGBoost** led on
-  RMSE, MAE, and R² simultaneously
-- Optuna tuning gave a modest, genuine improvement over the default (RMSE
-  20.06 → 19.80 days on validation), confirmed on the held-out test set
-  (RMSE 20.05, MAE 12.97, R² 0.574) — closely matching validation, with no
-  sign of overfitting
-- Segmented performance by `item_category` was consistent with the overall
-  model; by `vendor_tier`, Gold vendors showed the most accurate
-  predictions (RMSE 10.77) and Silver the weakest (RMSE 29.12), plausibly
-  reflecting less-established or lower-volume vendor relationships
-- Cross-validated against
-  [Rząd et al. (2019)](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Submission-2.pdf):
-  two of their three strongest predictors ("Record Subsequent Invoice,"
-  "Cancel Goods Receipt") were entirely eliminated by this project's
-  stricter prediction-point discipline, since neither legitimately occurs
-  before Goods Receipt — where the studies do agree ("Block Purchase Order
-  Item," administrative/pricing activities), the finding held
-- Overall feature importance was dominated by `sub_spend_area_Labels`
-  (independently confirmed as genuine: 32,645 cases, mean throughput 91.79
-  vs. 58.33 days for all other cases) and `vendor_tier` — the latter
-  legitimately reflecting a vendor's own completed-case history, not data
-  leakage
-- Applied to the 38,047 scorable unfinished cases, predicted clearing
-  times varied substantially by vendor tier (Gold fastest at ~32 days,
-  Insufficient Data slowest at ~106 days) — with "No Award" (68% of the
-  scoring set) and "Insufficient Data" vendors flagged as the highest-impact
-  groups for closer monitoring
+  | Model / Group | PO Item → GR | GR → Invoice Receipt | Invoice Receipt → Clear Invoice |
+  |---|---|---|---|
+  | Baseline (all cases) | 6.58% | 10.94% | 13.16% |
+  | All de facto deviators (8,486) | 5.89% | 19.60% | 64.00% |
+  | High-multiplicity deviators (2,349) | 1.45% | 6.48% | 7.58% |
 
-**Champion model:** tuned XGBoost, tracked in Weights & Biases, with the
-trained model and scoring predictions exported for downstream use (Power
-BI dashboard, stretch goal).
+- **Which vendors produce disproportionate rework?** Among the top 100
+  vendors by volume, 26 unique vendors appear across the three "worst 10"
+  lists, with violation rates (24-38%) substantially above baseline.
+  `vendorID_0282` shows a genuine 100% violation rate on invoice clearing
+  (277/277 cases). Notably, the two highest-volume vendors overall
+  (`vendorID_0136`, `vendorID_0120`, 13,000+ cases each) show only
+  moderate violation rates (2.97-23.23% and 1.79-20.54%) — indicating
+  **business volume does not drive violations; the worst rates
+  concentrate among mid-sized vendors.**
 
-**Part 2 - Vendor Award tiers** (5.1), adapted from the UK's [Fair Payment Code](https://www.smallbusinesscommissioner.gov.uk/fpc/code-criteria/),
-classify 445 of 1,674 vendors into No Award/Bronze/Silver+ based on actual
-payment history; the remaining 1,229 lack sufficient history (1,222) or
-are structurally ineligible (7, Consignment-only).
+**4. Prediction (this project's extension, Notebook 6):**
 
-**Model A (existing vendors)** predicts a vendor's tier from their own
-aggregated case history:
+Based on these findings, three models were developed predicting throughput
+(Part 1) and vendors' performance (Part 2):
 
-- With only 445 vendors, neither Logistic Regression nor Decision Tree
-  achieved strong performance (macro F1 0.455/0.416) — a genuine
-  sample-size constraint, not a fixable modeling gap (confirmed via
-  regularization sweeps and feature-variance checks)
-- **Both models are reported rather than selecting a single champion**,
-  given their distinct error profiles
-- Applied to the 1,222 "Insufficient Data" vendors, the two models'
-  predictions converge somewhat as history accumulates (27.1% agreement at
-  1–5 cases → 66.5% at 16–30 cases), but even the most experienced
-  thin-history vendors (30+ cases, n=77) show only 61.0% agreement — barely
-  better than chance for a 3-class problem; given the models' overall weak
-  performance, **predictions should be treated with severe caution and
-  manually verified**, not used as an automatic classification
+- **Part 1 — Case-Level Throughput Prediction:** The **champion model
+  tuned XGBoost** achieves RMSE 20.05 days (R² 0.574) on the test set,
+  outperforming Linear Regression, Decision Tree, and Random Forest
+  baselines, and cross-validated against
+  [Rząd et al. (2019)](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Submission-2.pdf).
+  A prior study's top-cited predictor was found to rely on information
+  not actually knowable at this project's stricter, genuinely
+  forward-looking prediction point. Feature importance is dominated by a
+  single spend category (`sub_spend_area_Labels`) — cases in this
+  category take a consistent 33.5-day-longer median throughput than all
+  others, a concrete, actionable pattern. Performance also varies
+  meaningfully by vendor reliability tier, with Gold-tier vendors' cases
+  predicted most accurately and Silver-tier the least.
 
-**Model B (new vendors)** predicts a vendor's likely tier from order-level
-attributes alone, with no vendor-derived features:
-
-- At Model B's much larger scale (166,447 rows), all four tested models
-  substantially outperformed Model A (best: Random Forest, 0.729
-  cross-validated macro F1) — data volume, not model sophistication, was
-  Model A's binding constraint
-- A significant methodological finding: `XGBClassifier` does not support
-  `class_weight`, silently invalidating its initial comparison against the
-  other three — corrected via explicit `sample_weight`, revealing
-  **Random Forest as the genuine champion**
-- The final model reaches 0.70 accuracy, but **macro F1 (0.50) is the more
-  honest measure** given the test set's class imbalance (72% No Award) —
-  raw accuracy alone would overstate performance on the harder Bronze and
-  Silver+ classes
-- Misclassifications concentrate between adjacent tiers (73.6% of Silver+
-  errors predicted as Bronze), rarely confusing distant tiers (3.4%
-  Silver+↔No Award) — a coherent, ordered error pattern
-- Practical Model Usage examples confirm the model can be highly
-  confident when correct (>99% probability) while transparently signaling
-  uncertainty on genuine close calls. **Despite its limitations, Model B
-  can meaningfully help classify new vendors — but results should be
-  treated with some caution, not taken as an automatic classification,
-  and manually verified for close calls**
-
-**Together, Models A and B address complementary populations**: A for
-vendors with enough history to rate reliably but not yet formally rated;
-B for vendors with too little history for A to apply at all. All three of
-Part 2's models are logged on Weights & Biases (Model A: Logistic
-Regression, Decision Tree; Model B: Random Forest).
-
-![XGBoost predicted vs. actual (validation set)](images/06_throughput_and_vendor_prediction/part1_predicted_vs_actual.png)
-
-*Figure 6: The Predicted-vs-actual scatter plot for XGBoost shows that predictions track the diagonal closely for actual durations up to roughly 100 days, confirming genuine predictive signal across most of the data. However, extreme cases remain underpredicted for actual durations above ~120–150 days.*
-
-![XGBoost: Top 20 Feature Importances (Part 1)](images/06_throughput_and_vendor_prediction/part1_xgboost_feature_importance.png)
-
-*Figure 7: The top-20 features are dominated by the two categories `sub_spend_area_Labels` (importance = 0.15) and `vendor_tier` (importance = 0.10), both consistent with findings already established elsewhere in this project.*
-
-![Model A confusion matrix on the the full dataset](images/06_throughput_and_vendor_prediction/model_a_confusion_matrices_full_dataset.png)
-
-*Figure 8: Confusion matrix of Model A: Logistic Regression is stronger for No Award (177/233 correct) but frequently overestimates Bronze vendors as Silver+ (73 of 160 Bronze vendors misclassified this way). Decision Tree is meaningfully better at correctly identifying Bronze vendors (58/160 vs. 39/160), but at the cost of more confusion between No Award and Bronze (54 No Award vendors misclassified as Bronze). Silver+ remains difficult for both models (27/52 and 25/52 correct respectively).*
+- **Part 2 — Vendor Award Prediction:** Two complementary models predict
+  a vendor's reliability tier (No Award/Bronze/Silver+) — **Model A** for
+  existing vendors (Logistic Regression: macro F1 0.455, Decision Tree:
+  macro F1 0.416, constrained by only 445 rated vendors, no single
+  champion given their distinct error profiles) and **Model B** for
+  new/thin-history vendors (macro F1 0.50 on a held-out test set,
+  cross-validated macro F1 0.729, trained on 166,447 transactions). A
+  significant methodological finding — `XGBClassifier` silently ignoring
+  `class_weight` — was caught and corrected during development, revealing
+  **Random Forest** as the **champion model**. **Given each model's real
+  limitations, predictions are intended to support — not replace — manual
+  review**, especially for close calls between adjacent tiers.
 
 ![Model B confusion matrix](images/06_throughput_and_vendor_prediction/model_b_confusion_matrix.png)
 
-*Figure 9: Confusion matrix of Model B: Errors concentrate almost entirely between adjacent tiers, not across the full spectrum: Silver+: only 23.0% of Silver+ vendors are correctly predicted as Silver+ (590 of 2,560); 73.6% (1,884 of 2,560) are predicted as Bronze, and just 3.4% (86 of 2,560) are confused with No Award, a similar adjacent-tier pattern occurs between No Award and Bronze (8,399 and 2,009 cases respectively).  In contrast, the large majority of No Award vendors are correctly predicted as such (76.6%, 30,428 of 39,730).*
+*Figure 4: Model B's confusion matrix shows that errors concentrate almost
+entirely between adjacent tiers — a coherent, ordered sense of vendor
+reliability, even where exact boundaries remain uncertain.*
 
-![Model B Top 15 Feature Importances](images/06_throughput_and_vendor_prediction/model_b_feature_importance.png)
-
-*Figure 10: Model B's top 15 feature importances reveals that spend_classification_NPR and order_value are the main drivers of the model, together explaining more than half (0.58) of the model's total predictive power.*
-
-**SHAP & dtreeviz Explainability**
-
-SHAP and dtreeviz are applied to explain the champion models and arrive at similar conclusions:
-
-**Part 1 (Case-Level Throughput Prediction, XGBoost):**
-
-- Three independent methods — built-in feature importance (6.3.6), SHAP
-  global summary, and dtreeviz's tree structure — all identify the same
-  **two dominant features**: `vendor_tier_No Award` and `sub_spend_area_
-  Labels`, with `vendor_tier_No Award` appearing as the tree's first root split
-- SHAP's individual-case explanation revealed something the aggregate
-  methods could not: for the test set's single highest-predicted case,
-  neither dominant global feature appeared among its top drivers at all;
-  instead, `item_type_Subcontracting` and `sub_spend_area_Road Packed`
-  together explained nearly two-thirds of the case's entire above-baseline
-  prediction — this demonstrates a core value of individual-case
-  explainability: global importance describes what matters *on average*,
-  while a waterfall diagram illustrates what drove this *specific* case
-
-**Part 2, Model B (Vendor Award Prediction, Random Forest):**
-
-- The same three-method pattern repeats: built-in importance (6.4.2),
-  SHAP and dtreeviz all agree that `spend_classification_NPR` and
-  `order_value` are the **two dominant drivers**, together accounting for 58%
-  of the model's total feature importance
-- SHAP's multi-class comparison showed this dominance holds consistently
-  across all three award tiers, not just one specific class
-- Individual-case explanations connected directly to 6.4.2's Practical
-  Model Usage examples, providing a structural explanation for *why* the
-  model was confident in two cases (99.9% and 100.0%) and genuinely
-  uncertain in a third: the uncertain case's SHAP values were roughly
-  four times smaller than the confident cases', with no single feature
-  providing a strong signal — a concrete, visible reason for the model's
-  hesitation, in a case where that hesitation turned out to be warranted
-
-**In general**, the consistent, repeated agreement across three independent
-explainability methods — for two different models, built with different
-algorithms, addressing different problems — provides strong evidence that
-the feature-importance patterns identified throughout this project
-reflect genuine structure in the data, not artifacts of a measurement
-approach or modeling choice. This methodological rigor (verifying
-findings independently, where possible) has been applied across this
-entire portfolio project.
-
-![SHAP global summary (Part 1)](images/07_shap_dtreeviz_explainability/part1_shap_summary.png)
-
-*Figure 10: SHAP confirms XGBoost's built-in feature importance ranking with vendor_tier_No Award and sub_spend_area_Labels as the two most influential features.*
+**SHAP & dtreeviz Explainability (Notebook 7):** Three independent
+methods (built-in feature importance, SHAP, and tree structure)
+consistently agree on each model's dominant drivers — `vendor_tier_No
+Award` and `sub_spend_area_Labels` for Part 1; `spend_classification_NPR`
+and `order_value` for Model B — providing strong evidence that these
+patterns reflect genuine structure in the data, not artifacts of any
+single measurement approach.
 
 ![dtreeviz structural visualization (Part 1)](images/07_shap_dtreeviz_explainability/part1_dtreeviz.png)
 
-*Figure 11: Visualizing the first three levels of a representative tree from the XGBoost ensemble confirms the feature importance findings. The tree's very first split — its root decision — is on vendor_tier_No Award, showing that the model's first question is about this feature when classifying any new case — confirming the overall dominance of this feature, the second level contains vendor_tier_ Gold and sub_spend_area_Labels — two of the top four globally important features — further illustrating their predictive power.*
+*Figure 5: A representative tree from the XGBoost ensemble (Part 1) shows
+its very first split is on `vendor_tier_No Award` — the model's single
+most important decision — directly confirming the same feature identified
+as dominant by two independent methods.*
 
-![SHAP global summary (Model B, Silver+ class)](images/07_shap_dtreeviz_explainability/model_b_shap_summary.png)
+![Model B SHAP summary](images/07_shap_dtreeviz_explainability/model_b_shap_summary.png)
 
-*Figure 12: SHAP confirms the built-in Random Forest feature importance ranking exactly (computed on a 5,000-row sample of the test set): spend_classification_NPR and order_value are the two most influential features for predicting Silver+.*
-
+*Figure 6: Model B's SHAP summary independently confirms
+`spend_classification_NPR` and `order_value` as the dominant drivers of
+vendor tier predictions, consistently across all three award tiers.*
 
 ## Business Recommendations
 
