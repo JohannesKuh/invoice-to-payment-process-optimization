@@ -28,7 +28,7 @@ Process mining and machine learning applied to a SAP procurement dataset of a la
   methods providing strong evidence of the discovered patterns
 - Business recommendations: Applying the tuned XGBoost throughput model
   (Part 1) to open cases identifies poor-performing vendor groups
-  needing closer attention (e.g. "Insufficient Data" vendors, ~106 days
+  demanding closer attention (e.g. "Insufficient Data" vendors, ~106 days
   to clear on average); applying Model B's champion Random Forest to
   vendor-tier prediction demonstrates confident, correct predictions
   (>99% top probability) in clear-cut cases, while also revealing when a
