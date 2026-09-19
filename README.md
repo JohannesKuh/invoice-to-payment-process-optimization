@@ -154,9 +154,11 @@ describe the process, since a single unsegmented model produces an
 unreadable "spaghetti" result.
 
 ![Main flow: 3-way match, invoice before GR — excluding SRM](images/02_process_discovery/petri_net_3way_before_gr.png)
+
 *Figure 1: "3-way match, invoice before GR" (77.37% of events): Clear "spaghetti" illustration of BPI 2019's known complexity, with dense parallel/looping structures in the middle.*
 
 ![Main flow: petri_net_3way_before_gr_no_srm](images/02_process_discovery/petri_net_3way_before_gr_no_srm.png)
+
 *Figure 2: "3-way match, invoice before GR — excluding SRM" Excluding SRM cases from the two 3-way match categories removed a small number of cases (before GR: 221,010 → 220,181, -0.4%; after GR: 15,182 → 14,571, -4.0%), but the resulting process models remained visually complex, similar to the originals.*
 
 ### 2. **Throughput analysis (enhancement):** What is the throughput of the invoicing process — the time between goods receipt, invoice receipt and payment (invoice clearing) — including matching the correct goods receipts to invoices when a single line item has several of each?
@@ -243,6 +245,7 @@ and both take over 100 days to clear — a significant business impact
 given their scale.
 
 ![Activity-Level Bottleneck Analysis by Theme](images/04_process_enhancement/activity_bottleneck_by_theme.png)
+
 *Figure 3: The following five patterns emerge when analyzing the top 20 transitions by occurrence and the longest-duration transitions among pairs occurring at least 50 times: Approval-related delays, Core process flow, Deviation cluster, Payment-block sub-flow, Repetitive activities (self-loop).*
 
 ### 3. **Conformance and deviation:** Which purchase documents stand out from the log, where do they deviate from the discovered process models and how severe are these deviations — both in terms of process flow and invoice values (e.g. vendors producing disproportionate rework due to invoice errors)?
@@ -329,9 +332,11 @@ structural, vendor-wide, or complexity-related patterns — a candidate for
 further investigation in the planned OCPM extension.
 
 ![De facto model](images/03_conformance_checking/de_facto_model.png)
+
 *Figure 4: Filtered de facto model (noise_threshold=0.2) with a slightly lower fitting score of 96.16%.*
 
 ![De jure model](images/03_conformance_checking/de_jure_model.png)
+
 *Figure 5: De jure model — comprising only the documented core sequence (PO Item → GR → Invoice Receipt → Clear Invoice) — shows that just 66.96% of all cases fitting exactly, meaning 33.04% of cases deviating from the officially documented policy.*
 
 ### 4. **Prediction (this project's extension):** 
@@ -431,9 +436,11 @@ Regression, Decision Tree; Model B: Random Forest).
 *Figure 6: The Predicted-vs-actual scatter plot for XGBoost shows that predictions track the diagonal closely for actual durations up to roughly 100 days, confirming genuine predictive signal across most of the data. However, extreme cases remain underpredicted for actual durations above ~120–150 days.*
 
 ![XGBoost: Top 20 Feature Importances (Part 1)](images/06_throughput_and_vendor_prediction/part1_xgboost_feature_importance.png)
+
 *Figure 7: The top-20 features are dominated by the two categories `sub_spend_area_Labels` (importance = 0.15) and `vendor_tier` (importance = 0.10), both consistent with findings already established elsewhere in this project.*
 
 ![Model A confusion matrix on the the full dataset](images/06_throughput_and_vendor_prediction/model_a_confusion_matrices_full_dataset.png)
+
 *Figure 8: Confusion matrix of Model A: Logistic Regression is stronger for No Award (177/233 correct) but frequently overestimates Bronze vendors as Silver+ (73 of 160 Bronze vendors misclassified this way). Decision Tree is meaningfully better at correctly identifying Bronze vendors (58/160 vs. 39/160), but at the cost of more confusion between No Award and Bronze (54 No Award vendors misclassified as Bronze). Silver+ remains difficult for both models (27/52 and 25/52 correct respectively).*
 
 ![Model B confusion matrix](images/06_throughput_and_vendor_prediction/model_b_confusion_matrix.png)
@@ -444,13 +451,62 @@ Regression, Decision Tree; Model B: Random Forest).
 
 *Figure 10: Model B's top 15 feature importances reveals that spend_classification_NPR and order_value are the main drivers of the model, together explaining more than half (0.58) of the model's total predictive power.*
 
-![SHAP feature importance, Model B](images/07_shap_dtreeviz_explainability/model_b_shap_summary.png)
-*Figure: SHAP confirms `spend_classification_NPR` and `order_value` as 
-the dominant drivers of vendor tier predictions, consistently across all 
-three award tiers — independently validating the model's built-in feature 
-importance ranking.*
+**SHAP & dtreeviz Explainability**
 
-*(To be completed once analysis is finished.)*
+SHAP and dtreeviz are applied to explain the champion models and arrive at similar conclusions:
+
+**Part 1 (Case-Level Throughput Prediction, XGBoost):**
+
+- Three independent methods — built-in feature importance (6.3.6), SHAP
+  global summary, and dtreeviz's tree structure — all identify the same
+  **two dominant features**: `vendor_tier_No Award` and `sub_spend_area_
+  Labels`, with `vendor_tier_No Award` appearing as the tree's first root split
+- SHAP's individual-case explanation revealed something the aggregate
+  methods could not: for the test set's single highest-predicted case,
+  neither dominant global feature appeared among its top drivers at all;
+  instead, `item_type_Subcontracting` and `sub_spend_area_Road Packed`
+  together explained nearly two-thirds of the case's entire above-baseline
+  prediction — this demonstrates a core value of individual-case
+  explainability: global importance describes what matters *on average*,
+  while a waterfall diagram illustrates what drove this *specific* case
+
+**Part 2, Model B (Vendor Award Prediction, Random Forest):**
+
+- The same three-method pattern repeats: built-in importance (6.4.2),
+  SHAP and dtreeviz all agree that `spend_classification_NPR` and
+  `order_value` are the **two dominant drivers**, together accounting for 58%
+  of the model's total feature importance
+- SHAP's multi-class comparison showed this dominance holds consistently
+  across all three award tiers, not just one specific class
+- Individual-case explanations connected directly to 6.4.2's Practical
+  Model Usage examples, providing a structural explanation for *why* the
+  model was confident in two cases (99.9% and 100.0%) and genuinely
+  uncertain in a third: the uncertain case's SHAP values were roughly
+  four times smaller than the confident cases', with no single feature
+  providing a strong signal — a concrete, visible reason for the model's
+  hesitation, in a case where that hesitation turned out to be warranted
+
+**In general**, the consistent, repeated agreement across three independent
+explainability methods — for two different models, built with different
+algorithms, addressing different problems — provides strong evidence that
+the feature-importance patterns identified throughout this project
+reflect genuine structure in the data, not artifacts of a measurement
+approach or modeling choice. This methodological rigor (verifying
+findings independently, where possible) has been applied across this
+entire portfolio project.
+
+![SHAP global summary (Part 1)](images/07_shap_dtreeviz_explainability/part1_shap_summary.png)
+
+*Figure 10: SHAP confirms XGBoost's built-in feature importance ranking with vendor_tier_No Award and sub_spend_area_Labels as the two most influential features.*
+
+![dtreeviz structural visualization (Part 1)](images/07_shap_dtreeviz_explainability/part1_dtreeviz.png)
+
+*Figure 11: Visualizing the first three levels of a representative tree from the XGBoost ensemble confirms the feature importance findings. The tree's very first split — its root decision — is on vendor_tier_No Award, showing that the model's first question is about this feature when classifying any new case — confirming the overall dominance of this feature, the second level contains vendor_tier_ Gold and sub_spend_area_Labels — two of the top four globally important features — further illustrating their predictive power.*
+
+![SHAP global summary (Model B, Silver+ class)](images/07_shap_dtreeviz_explainability/model_b_shap_summary.png)
+
+*Figure 12: SHAP confirms the built-in Random Forest feature importance ranking exactly (computed on a 5,000-row sample of the test set): spend_classification_NPR and order_value are the two most influential features for predicting Silver+.*
+
 
 ## Business Recommendations
 
