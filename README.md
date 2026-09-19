@@ -35,7 +35,7 @@ Process mining and machine learning applied to a SAP procurement dataset of a la
   prediction is a genuine close call that should be manually verified
   rather than used for automatic classification
 - Business impact: Since over 60% of total procurement value results from
-  operational efforts, according to [Bain & Company (2022)](https://www.bain.com/insights/how-to-succeed-in-procurement-in-2022/), combining process mining and machine learning helps identify real
+  operational efforts, according to [Bain & Company (2022)](https://www.bain.com/insights/how-to-succeed-in-procurement-in-2022/), combining process mining and machine learning helps to identify real
   operational deficiencies — e.g. complex process flows, poor vendor
   performance — and predict them early, enabling active management decisions to improve overall procurement outcomes
 
