@@ -302,7 +302,94 @@ vendor tier predictions, consistently across all three award tiers.*
 
 ## Business Recommendations
 
+The trained models were applied to different business scenarios based on
+the procurement dataset. The outcomes lead to the following business
+recommendations:
+
+**Part 1 — Throughput monitoring:** Applying the champion model to the
+38,047 currently open cases shows predicted clearing times ranging from
+~32 days (Gold-tier vendors) to ~106 days on average (Insufficient Data
+vendors). Two groups require closer monitoring: **"Insufficient Data"
+vendors** (slowest predicted times, likely reflecting less-established
+relationships or weaker internal invoicing standards) and **"No Award"
+vendors** (68% of all open cases — even a moderate per-case delay
+translates into substantial aggregate business impact given this scale).
+Gold-tier vendors, by contrast, process fast enough to plausibly support
+early-payment discount terms where such arrangements exist.
+
+**Part 2 — Vendor tier prediction:** Model B estimates a full probability
+distribution across all three award tiers for new or thin-history
+vendors — not just a single label — letting a user judge how much to
+trust each prediction. In practice: **treat predictions with a clear top
+probability (>80–90%) as reliable**; treat a close call between adjacent
+tiers (e.g., Bronze vs. Silver+, probabilities within ~15 percentage
+points) as "likely better than average, but the exact tier is uncertain"
+— worth a closer manual look rather than an automatic classification.
+
+Selecting three representative cases, the model reveals the following:
+
+| Case | Item Category | Order Value | Bronze | No Award | Silver+ | Predicted | Actual |
+|---|---|---|---|---|---|---|---|
+| A | Sales | €2 | 0.1% | 0.0% | **99.9%** | Silver+ | Silver+ ✓ |
+| B | Packaging | €18,984 | 0.0% | **100.0%** | 0.0% | No Award | No Award ✓ |
+| C | Sales | €31 | **53.6%** | 8.2% | 38.2% | Bronze | Silver+ ✗ |
+
+Cases A and B illustrate a confident, correct prediction (>99% top
+probability); Case C illustrates the model's known limitation — a genuine
+Silver+ vendor predicted as Bronze, with the top two probabilities only
+~15 percentage points apart, exactly the kind of close call the guidance
+above warns against treating as definitive.
+
+**Overall**, neither Part 1's nor Part 2's models achieve strong
+predictive power in isolation. **Model A (existing vendors) is
+particularly limited** — with only 445 rated vendors available, neither
+Logistic Regression nor Decision Tree reached strong performance (macro
+F1 0.455/0.416), a genuine sample-size constraint rather than a fixable
+modeling gap. It is therefore **not recommended for standalone business
+use** in its current form. However, the two genuine **champion models** —
+**tuned XGBoost** for throughput prediction and **Random Forest** for
+Model B's vendor-tier prediction — are trained on a substantially larger
+dataset and show promising results; they **could support — not replace —
+manual review**, especially for close calls, serving as an early-warning
+and monitoring tool to flag which open cases and which vendors need a
+closer look.
+
 ## Limitations & Further Research
+
+### Methodological Decisions
+- Prediction-point discipline (as-of-GR for Part 1) — a stricter standard
+  than prior work ([Rząd et al. (2019)](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Submission-2.pdf)), excluding some potentially predictive
+  signals to avoid hindsight leakage
+- Vendor-grouped splitting — necessary to prevent leakage, but costs
+  fine-grained class-balance control
+- Award tier simplification (Silver+Gold merge) — resolved Model A's
+  small-sample problem, though Model B's larger scale might support
+  keeping them separate
+
+### Known Limitations
+- Silver+ remains difficult to predict across every model tested — likely
+  a genuine data limitation, not a fixable modeling gap
+- Model scope: only 4 mainstream models tested per part; LightGBM/CatBoost
+  considered but not included given time constraints and observed
+  performance plateau
+- Model B's predictions rest heavily on just two features
+  (`spend_classification_NPR` and `order_value`, 58% combined importance)
+  — the model may be less robust than its aggregate score suggests if
+  either field has data-quality issues in a production setting
+
+### Further Research
+- Part 1's as-of-IR staged extension: a second model predicting time to
+  Clear Invoice once `gr_to_ir_days` is already known (i.e., predicting
+  from Invoice Receipt onward, rather than Goods Receipt) — likely higher
+  predictive power given more information is available at that later
+  checkpoint, but not built in this notebook
+- Keeping Gold/Silver separate for Model B specifically, given its larger
+  sample size
+- Testing LightGBM/CatBoost for a fuller model comparison
+- Investigating whether `sub_spend_area = Labels`'s throughput gap
+  (Part 1) reflects a genuine process bottleneck worth business
+  intervention, or an artifact of how these orders are typically handled
+- OCPM and social network analysis extensions (already noted in README)
 
 ## Tools & Technologies
 
