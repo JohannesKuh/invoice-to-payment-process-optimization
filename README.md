@@ -336,11 +336,113 @@ further investigation in the planned OCPM extension.
 
 ### 4. **Prediction (this project's extension):** 
 
-De facto vs. de jure model comparison (Approach/Conformance section)
-XGBoost predicted-vs-actual scatter plot (Key Findings, Part 1)
-Model B's confusion matrix (Key Findings, Part 2)
-Model B's multi-class SHAP summary bar chart (Key Findings or a brief Explainability mention)
-(optional, if you still want one more) Part 1's SHAP summary, for symmetry between the two parts
+**Part 1 - Case-Level Throughput Prediction** predicts `gr_to_clear_days` for
+individual cases, with a strict "as-of-Goods-Receipt" prediction point to
+prevent hindsight leakage:
+
+- All four baseline models achieved meaningful signal (RMSE 20–25 days,
+  well below the target's ~30-day standard deviation); **XGBoost** led on
+  RMSE, MAE, and R² simultaneously
+- Optuna tuning gave a modest, genuine improvement over the default (RMSE
+  20.06 → 19.80 days on validation), confirmed on the held-out test set
+  (RMSE 20.05, MAE 12.97, R² 0.574) — closely matching validation, with no
+  sign of overfitting
+- Segmented performance by `item_category` was consistent with the overall
+  model; by `vendor_tier`, Gold vendors showed the most accurate
+  predictions (RMSE 10.77) and Silver the weakest (RMSE 29.12), plausibly
+  reflecting less-established or lower-volume vendor relationships
+- Cross-validated against
+  [Rząd et al. (2019)](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Submission-2.pdf):
+  two of their three strongest predictors ("Record Subsequent Invoice,"
+  "Cancel Goods Receipt") were entirely eliminated by this project's
+  stricter prediction-point discipline, since neither legitimately occurs
+  before Goods Receipt — where the studies do agree ("Block Purchase Order
+  Item," administrative/pricing activities), the finding held
+- Overall feature importance was dominated by `sub_spend_area_Labels`
+  (independently confirmed as genuine: 32,645 cases, mean throughput 91.79
+  vs. 58.33 days for all other cases) and `vendor_tier` — the latter
+  legitimately reflecting a vendor's own completed-case history, not data
+  leakage
+- Applied to the 38,047 scorable unfinished cases, predicted clearing
+  times varied substantially by vendor tier (Gold fastest at ~32 days,
+  Insufficient Data slowest at ~106 days) — with "No Award" (68% of the
+  scoring set) and "Insufficient Data" vendors flagged as the highest-impact
+  groups for closer monitoring
+
+**Champion model:** tuned XGBoost, tracked in Weights & Biases, with the
+trained model and scoring predictions exported for downstream use (Power
+BI dashboard, stretch goal).
+
+**Part 2 - Vendor Award tiers** (5.1), adapted from the UK's [Fair Payment Code](https://www.smallbusinesscommissioner.gov.uk/fpc/code-criteria/),
+classify 445 of 1,674 vendors into No Award/Bronze/Silver+ based on actual
+payment history; the remaining 1,229 lack sufficient history (1,222) or
+are structurally ineligible (7, Consignment-only).
+
+**Model A (existing vendors)** predicts a vendor's tier from their own
+aggregated case history:
+
+- With only 445 vendors, neither Logistic Regression nor Decision Tree
+  achieved strong performance (macro F1 0.455/0.416) — a genuine
+  sample-size constraint, not a fixable modeling gap (confirmed via
+  regularization sweeps and feature-variance checks)
+- **Both models are reported rather than selecting a single champion**,
+  given their distinct error profiles
+- Applied to the 1,222 "Insufficient Data" vendors, the two models'
+  predictions converge somewhat as history accumulates (27.1% agreement at
+  1–5 cases → 66.5% at 16–30 cases), but even the most experienced
+  thin-history vendors (30+ cases, n=77) show only 61.0% agreement — barely
+  better than chance for a 3-class problem; given the models' overall weak
+  performance, **predictions should be treated with severe caution and
+  manually verified**, not used as an automatic classification
+
+**Model B (new vendors)** predicts a vendor's likely tier from order-level
+attributes alone, with no vendor-derived features:
+
+- At Model B's much larger scale (166,447 rows), all four tested models
+  substantially outperformed Model A (best: Random Forest, 0.729
+  cross-validated macro F1) — data volume, not model sophistication, was
+  Model A's binding constraint
+- A significant methodological finding: `XGBClassifier` does not support
+  `class_weight`, silently invalidating its initial comparison against the
+  other three — corrected via explicit `sample_weight`, revealing
+  **Random Forest as the genuine champion**
+- The final model reaches 0.70 accuracy, but **macro F1 (0.50) is the more
+  honest measure** given the test set's class imbalance (72% No Award) —
+  raw accuracy alone would overstate performance on the harder Bronze and
+  Silver+ classes
+- Misclassifications concentrate between adjacent tiers (73.6% of Silver+
+  errors predicted as Bronze), rarely confusing distant tiers (3.4%
+  Silver+↔No Award) — a coherent, ordered error pattern
+- Practical Model Usage examples confirm the model can be highly
+  confident when correct (>99% probability) while transparently signaling
+  uncertainty on genuine close calls. **Despite its limitations, Model B
+  can meaningfully help classify new vendors — but results should be
+  treated with some caution, not taken as an automatic classification,
+  and manually verified for close calls**
+
+**Together, Models A and B address complementary populations**: A for
+vendors with enough history to rate reliably but not yet formally rated;
+B for vendors with too little history for A to apply at all. All three of
+Part 2's models are logged on Weights & Biases (Model A: Logistic
+Regression, Decision Tree; Model B: Random Forest).
+
+![XGBoost predicted vs. actual (validation set)](images/06_throughput_and_vendor_prediction/part1_predicted_vs_actual.png)
+
+*Figure 6: The Predicted-vs-actual scatter plot for XGBoost shows that predictions track the diagonal closely for actual durations up to roughly 100 days, confirming genuine predictive signal across most of the data. However, extreme cases remain underpredicted for actual durations above ~120–150 days.*
+
+![XGBoost: Top 20 Feature Importances (Part 1)](images/06_throughput_and_vendor_prediction/part1_xgboost_feature_importance.png)
+*Figure 7: The top-20 features are dominated by the two categories `sub_spend_area_Labels` (importance = 0.15) and `vendor_tier` (importance = 0.10), both consistent with findings already established elsewhere in this project.*
+
+![Model A confusion matrix on the the full dataset](images/06_throughput_and_vendor_prediction/model_a_confusion_matrices_full_dataset.png)
+*Figure 8: Confusion matrix of Model A: Logistic Regression is stronger for No Award (177/233 correct) but frequently overestimates Bronze vendors as Silver+ (73 of 160 Bronze vendors misclassified this way). Decision Tree is meaningfully better at correctly identifying Bronze vendors (58/160 vs. 39/160), but at the cost of more confusion between No Award and Bronze (54 No Award vendors misclassified as Bronze). Silver+ remains difficult for both models (27/52 and 25/52 correct respectively).*
+
+![Model B confusion matrix](images/06_throughput_and_vendor_prediction/model_b_confusion_matrix.png)
+
+*Figure 9: Confusion matrix of Model B: Errors concentrate almost entirely between adjacent tiers, not across the full spectrum: Silver+: only 23.0% of Silver+ vendors are correctly predicted as Silver+ (590 of 2,560); 73.6% (1,884 of 2,560) are predicted as Bronze, and just 3.4% (86 of 2,560) are confused with No Award, a similar adjacent-tier pattern occurs between No Award and Bronze (8,399 and 2,009 cases respectively).  In contrast, the large majority of No Award vendors are correctly predicted as such (76.6%, 30,428 of 39,730).*
+
+![Model B Top 15 Feature Importances](images/06_throughput_and_vendor_prediction/model_b_feature_importance.png)
+
+*Figure 10: Model B's top 15 feature importances reveals that spend_classification_NPR and order_value are the main drivers of the model, together explaining more than half (0.58) of the model's total predictive power.*
 
 ![SHAP feature importance, Model B](images/07_shap_dtreeviz_explainability/model_b_shap_summary.png)
 *Figure: SHAP confirms `spend_classification_NPR` and `order_value` as 
