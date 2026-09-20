@@ -72,7 +72,11 @@ This project follows the three original questions posed by the BPI Challenge, ex
   `BPI_Challenge_2019.xes`, ~695 MB uncompressed)
 - **License:** CC BY 4.0 (dataset) — separate from this repository's MIT license, which covers code only. Citation: van Dongen, B.F., *BPI Challenge 2019*. 4TU.ResearchData.
 - **Format:** IEEE XES standard, read natively via `pm4py.read_xes()`
-- **Scope:** 1,595,923 events across 251,734 cases (case ID = purchase document + item), spanning 76,349 purchase documents, 42 activities and 627 users (607 human, 20 batch/automated) — covering purchase orders submitted in 2018 across 60 subsidiaries
+- **Scope:** 1,595,923 events across 251,734 cases (case ID = purchase
+  document + item), spanning 76,349 purchase documents, 42 activities and
+  627 users (607 human, 20 batch/automated) — covering purchase orders
+  submitted primarily between January 2018 and January 2019, across 60
+  subsidiaries
 - **Key attributes:** Case ID, activity, timestamp, resource (user), purchasing document ID, item type, item category (3-way with/without GR-based invoicing, 2-way, consignment), vendor, company (subsidiary), spend classification text, GR-based invoice verification flag, goods receipt flag
 - **Note:** The raw `.xes` file is not committed to this repository due to its size — see the link above to download it directly. `data/raw/` is excluded via `.gitignore`.
 
@@ -82,11 +86,11 @@ This project follows the three original questions posed by the BPI Challenge, ex
   conformance checking against the expected purchase-to-pay flow
 - **Segmented analysis:** Where relevant, process discovery, conformance
   checking and duration analysis are performed both in aggregate and
-  segmented by item category (the four flow types), vendor, subsidiary
-  and time period — since aggregate metrics can mask meaningful variation
-  across these dimensions (e.g. a company-wide average duration can look
-  acceptable while masking poor performance concentrated in a few
-  subsidiaries)
+  segmented by item category (the four flow types), vendor and activity
+  — since aggregate metrics can mask meaningful variation across these
+  dimensions (e.g. a vendor-wide average duration can look acceptable
+  while masking poor performance concentrated in a few individual
+  vendors).
 - **Conformance checking:** BPI 2019 lacks a formal, machine-readable
   reference (de jure) process model, a known gap also faced by both
   winning BPI Challenge 2019 submissions
@@ -135,7 +139,7 @@ under time pressure.
   high-throughput specialists
 - **Object-centric process mining** — OCEL 2.0 conversion and PM4Py's
   object-centric discovery, to more accurately capture the one-to-many
-  relationships (e.g., multiple goods receipts/invoices per line item)
+  relationships (e.g. multiple goods receipts/invoices per line item)
   that this project's single-case-notion analysis simplifies
 - **Power BI Dashboard & Process.Science Integration** — a three-dashboard
   Power BI application (Process Overview, Vendor & Spend, Rework &
@@ -199,7 +203,7 @@ This 63-day aggregate figure masks substantial heterogeneity:
   entirely different underlying bottlenecks.
 - **By vendor:** Throughput varies over 20x between the fastest and
   slowest vendors and *where* the delay occurs also differs by vendor —
-  e.g., `vendor_0135` is the single fastest vendor at the GR→IR stage
+  e.g. `vendor_0135` is the single fastest vendor at the GR→IR stage
   (2 days) but the *slowest* overall (111 days end-to-end), since its
   entire delay concentrates in the later IR→Clear stage. A vendor that
   looks fast at one checkpoint can still be the worst performer overall.
@@ -398,7 +402,13 @@ gap. Model B's predictions rest heavily on just two features
 (`spend_classification_NPR` and `order_value`, 58% combined importance),
 so its robustness depends on those two fields' ongoing data quality. Only
 four mainstream models were tested per part; LightGBM/CatBoost were
-considered but not included given time constraints.
+considered but not included given time constraints. Subsidiary/company-
+and time-period segmentation were both considered (Notebooks 1, 2, and 4)
+but not pursued as standalone findings — `companyID_0000` accounts for
+over 99.6% of cases, leaving the remaining subsidiaries too small for a
+meaningful comparison and the dataset is almost entirely concentrated in
+a single 13-month window (Jan 2018–Jan 2019), leaving too little genuine
+variation for a time-based analysis.
 
 **Further research:** A staged extension predicting from Invoice Receipt
 onward (once `gr_to_ir_days` is known) could improve on Part 1's current
