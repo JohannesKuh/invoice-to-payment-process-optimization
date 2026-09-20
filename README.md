@@ -15,8 +15,8 @@ Process mining and machine learning applied to a SAP procurement dataset of a la
   primarily by the Invoice Receipt → Clear Invoice stage (accounting for
   roughly two-thirds of the median total), with throughput varying mainly by category, activity and vendors (e.g. throughput time between the fastest and slowest vendors varies **20x**, requiring a targeted process improvement analysis)
 - Trained and tuned **three predictive models**: Case-level throughput
-  prediction (champion: tuned XGBoost, RMSE = **20.05 days**, R² = 0.574,
-  Part 1) and vendor reliability classification (No Award / Bronze /
+  prediction (Part 1, champion: tuned XGBoost, RMSE = **20.05 days**, R² = 0.574)
+  and vendor reliability classification (No Award / Bronze /
   Silver+) for existing and new vendors (Part 2, Models A and B; Model
   B's champion: Random Forest, cross-validated macro F1 = **0.729**), both
   cross-validated against independent published BPI submissions
