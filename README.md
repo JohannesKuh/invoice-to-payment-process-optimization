@@ -15,10 +15,10 @@ Process mining and machine learning applied to a SAP procurement dataset of a la
   primarily by the Invoice Receipt → Clear Invoice stage (accounting for
   roughly two-thirds of the median total), with throughput varying mainly by category, activity and vendors (e.g. throughput time between the fastest and slowest vendors varies **20x**, requiring a targeted process improvement analysis)
 - Trained and tuned **three predictive models**: Case-level throughput
-  prediction (champion: tuned XGBoost, RMSE = 20.05 days, R² = 0.574,
+  prediction (champion: tuned XGBoost, RMSE = **20.05 days**, R² = 0.574,
   Part 1) and vendor reliability classification (No Award / Bronze /
   Silver+) for existing and new vendors (Part 2, Models A and B; Model
-  B's champion: Random Forest, cross-validated macro F1 = 0.729), both
+  B's champion: Random Forest, cross-validated macro F1 = **0.729**), both
   cross-validated against independent published BPI submissions
 - Model verification with SHAP & dtreeviz: Analysis independently
   confirmed the feature importance of each champion model (Part 1: tuned
@@ -28,10 +28,10 @@ Process mining and machine learning applied to a SAP procurement dataset of a la
   methods providing strong evidence of the discovered patterns
 - Business recommendations: Applying the tuned XGBoost throughput model
   (Part 1) to open cases identifies poor-performing vendor groups
-  demanding closer attention (e.g. "Insufficient Data" vendors, ~106 days
+  demanding closer attention (e.g. "Insufficient Data" vendors, **~106 days**
   to clear on average); applying Model B's champion Random Forest to
   vendor-tier prediction demonstrates confident, correct predictions
-  (>99% top probability) in clear-cut cases, while also revealing when a
+  (**>99%** top probability) in clear-cut cases, while also revealing when a
   prediction is a genuine close call that should be manually verified
   rather than used for automatic classification
 - Business impact: Since over 60% of total procurement value results from
@@ -41,7 +41,7 @@ Process mining and machine learning applied to a SAP procurement dataset of a la
 
 ## Project Overview
 
-This project applies process mining and predictive modeling to a real-world SAP procurement event log provided by [BPI Challenge 2019](https://icpmconference.org/2019/icpm-2019/contests-challenges/bpi-challenge-2019/), covering the full pipeline from process discovery to a deployable prediction tool. The analysis follows the three classical process mining stages — **process discovery**, **conformance checking** and **process enhancement** — and finally extends enhancement into predictive process monitoring using machine learning.
+This project applies process mining and predictive modeling to a real-world SAP procurement event log provided by [BPI Challenge 2019](https://icpmconference.org/2019/icpm-2019/contests-challenges/bpi-challenge-2019/), covering the full pipeline from process discovery to a deployable prediction tool. The analysis follows the three classical process mining stages — **process discovery**, **conformance checking** and **process enhancement** — and finally extends enhancement into **predictive process monitoring** using machine learning.
 
 **Key steps:**
 1. Load and clean the BPI 2019 event log (Notebook 1)
