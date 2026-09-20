@@ -403,7 +403,7 @@ gap. Model B's predictions rest heavily on just two features
 so its robustness depends on those two fields' ongoing data quality. Only
 four mainstream models were tested per part; LightGBM/CatBoost were
 considered but not included given time constraints. Subsidiary/company-
-and time-period segmentation were both considered (Notebooks 1, 2, and 4)
+and time-period segmentation were both considered (Notebooks 1, 2 and 4)
 but not pursued as standalone findings — `companyID_0000` accounts for
 over 99.6% of cases, leaving the remaining subsidiaries too small for a
 meaningful comparison and the dataset is almost entirely concentrated in
