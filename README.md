@@ -300,8 +300,8 @@ Based on these findings, three models were developed predicting throughput
   cross-validated **macro F1 0.729**, trained on 166,447 transactions). A
   significant methodological finding — `XGBClassifier` silently ignoring
   `class_weight` — was caught and corrected during development, revealing
-  **Random Forest** as the **champion model**. **Given each model's real
-  limitations, predictions are intended to support — not replace — manual
+  **Random Forest** as the **champion model**. Given each model's real
+  limitations, predictions are intended to **support — not replace — manual
   review**, especially for close calls between adjacent tiers.
 
 ![Model B confusion matrix](images/06_throughput_and_vendor_prediction/model_b_confusion_matrix.png)
