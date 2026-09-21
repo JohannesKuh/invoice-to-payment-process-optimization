@@ -286,7 +286,7 @@ Based on these findings, three models were developed predicting throughput
   not actually knowable at this project's stricter, genuinely
   forward-looking prediction point. Feature importance is dominated by a
   single spend category (`sub_spend_area_Labels`, importance **0.154**) — cases in this
-  category take a consistent 33.5-day-longer median throughput than all
+  category take a consistent **33.5-day-longer** median throughput than all
   others, a concrete, actionable pattern. Performance also varies
   meaningfully by vendor reliability tier, with Gold-tier vendors' cases
   predicted most accurately and Silver-tier the least.
