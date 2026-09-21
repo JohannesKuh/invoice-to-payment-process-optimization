@@ -202,8 +202,8 @@ This 63-day aggregate figure masks substantial heterogeneity:
   43 days. Two categories can share the same headline number while having
   entirely different underlying bottlenecks.
 - **By vendor:** Throughput varies over **20x** between the fastest and
-  slowest vendors and *where* the delay occurs also differs by vendor —
-  e.g. `vendor_0135` is the single fastest vendor at the GR→IR stage
+  slowest vendors and where the delay occurs also differs by vendor —
+  e.g. `vendor_0135` is the single *fastest* vendor at the GR→IR stage
   (2 days) but the *slowest* overall (111 days end-to-end), since its
   entire delay concentrates in the later IR→Clear stage. A vendor that
   looks fast at one checkpoint can still be the worst performer overall.
