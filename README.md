@@ -23,7 +23,7 @@ Process mining and machine learning applied to a SAP procurement dataset of a la
 - Model verification with SHAP & dtreeviz: Analysis independently
   confirmed the feature importance of each champion model (Part 1: tuned
   XGBoost, Part 2, Model B: Random Forest) — for example,
-  `spend_classification_NPR` and `order_value` account for 58% of Model
+  `spend_classification_NPR` and `order_value` account for **58%** of Model
   B's total feature importance — three independent explainability
   methods providing strong evidence of the discovered patterns
 - Business recommendations: Applying the tuned XGBoost throughput model
