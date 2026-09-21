@@ -365,7 +365,7 @@ Selecting three representative cases, the model reveals the following:
 | B | Packaging | €18,984 | 0.0% | **100.0%** | 0.0% | No Award | No Award ✓ |
 | C | Sales | €31 | **53.6%** | 8.2% | 38.2% | Bronze | Silver+ ✗ |
 
-Cases A and B illustrate a confident, correct prediction (>99% top
+Cases A and B illustrate a confident, correct prediction (**>99%** top
 probability); Case C illustrates the model's known limitation — a genuine
 Silver+ vendor predicted as Bronze, with the top two probabilities only
 ~15 percentage points apart, exactly the kind of close call the guidance
