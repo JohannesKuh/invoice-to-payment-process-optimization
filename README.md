@@ -195,13 +195,13 @@ This 63-day aggregate figure masks substantial heterogeneity:
   IR→Clear, GR→Clear) by `case:Item Category` shows the two dominant flow
   types — **"3-way match, invoice before GR"** (77.4% of events) and
   **"3-way match, invoice after GR"** (20.0% of events) — converge on a
-  similar ~63-day end-to-end total, but via opposite internal patterns.
+  similar **~63-day** end-to-end total, but via opposite internal patterns.
   "Invoice after GR" is *front-loaded* — most of its delay happens early,
   in the GR→IR stage (26 days) — while "invoice before GR" is
   *back-loaded*, with GR→IR taking only 9 days but IR→Clear stretching to
   43 days. Two categories can share the same headline number while having
   entirely different underlying bottlenecks.
-- **By vendor:** Throughput varies over 20x between the fastest and
+- **By vendor:** Throughput varies over **20x** between the fastest and
   slowest vendors and *where* the delay occurs also differs by vendor —
   e.g. `vendor_0135` is the single fastest vendor at the GR→IR stage
   (2 days) but the *slowest* overall (111 days end-to-end), since its
@@ -211,8 +211,8 @@ This 63-day aggregate figure masks substantial heterogeneity:
   among the top 20 transitions by occurrence and the longest-duration
   transitions among pairs occurring at least 50 times (186 of 383 pairs).
   The core process flow confirms "Record Invoice Receipt" → "Clear
-  Invoice" (133,595 occurrences, median 36.19 days) as the single primary
-  bottleneck — direct, activity-level confirmation that IR→Clear is the
+  Invoice" (133,595 occurrences, median **36.19 days**) as the single **primary
+  bottleneck** — direct, activity-level confirmation that IR→Clear is the
   main driver of end-to-end throughput.
 
 ![Activity-Level Bottleneck Analysis by Theme](images/04_process_enhancement/activity_bottleneck_by_theme.png)
@@ -242,14 +242,14 @@ reference model.*
   the top 10 largest overall — confirming document-specific factors, not
   size, drive these deviations.
 - **Where are deviations and how severe?** An unfiltered de facto model
-  shows 99.6% fitness, while the documented de jure policy shows only 67%
+  shows 99.6% fitness, while the documented de jure policy shows only **67%**
   — each flow type genuinely needs its own reference model.
   Cross-referencing deviator groups against de jure rules reveals **two
-  striking, counterintuitive patterns**: violations are nearly 5x higher
+  striking, counterintuitive patterns**: violations are nearly **5x** higher
   among general deviators versus baseline at the final invoice-clearing
   step — suggesting this is where genuine process friction happens
   (disputes, manual intervention, blocked payments) — while
-  high-multiplicity deviators are the *most* compliant group on every
+  high-multiplicity deviators are the **most** compliant group on every
   single rule, well below baseline — indicating these cases deviate due
   to structural complexity (multiple GR/invoice objects per case), not
   genuine non-compliance. A single-case-notion model cannot represent
@@ -264,7 +264,7 @@ reference model.*
 
 - **Which vendors produce disproportionate rework?** Among the top 100
   vendors by volume, 26 unique vendors appear across the three "worst 10"
-  lists, with violation rates (24-38%) substantially above baseline. For instance,
+  lists, with violation rates (**24-38%**) substantially above baseline. For instance,
   `vendorID_0282` shows a genuine 100% violation rate on invoice clearing
   (277/277 cases). Notably, the two highest-volume vendors overall
   (`vendorID_0136`, `vendorID_0120`, 13,000+ cases each) show only
@@ -278,7 +278,7 @@ Based on these findings, three models were developed predicting throughput
 (Part 1) and vendors' performance (Part 2):
 
 - **Part 1 — Case-Level Throughput Prediction:** The **champion model
-  tuned XGBoost** achieves RMSE 20.05 days (R² 0.574) on the test set,
+  tuned XGBoost** achieves **RMSE 20.05 days** (R² 0.574) on the test set,
   outperforming Linear Regression, Decision Tree and Random Forest
   baselines and cross-validated against
   [Rząd et al. (2019)](https://icpmconference.org/2019/wp-content/uploads/sites/6/2019/07/BPI-Challenge-Submission-2.pdf).
@@ -297,7 +297,7 @@ Based on these findings, three models were developed predicting throughput
   macro F1 0.416, constrained by only 445 rated vendors, no single
   champion given their distinct error profiles) and **Model B** for
   new/thin-history vendors (macro F1 0.50 on a held-out test set,
-  cross-validated macro F1 0.729, trained on 166,447 transactions). A
+  cross-validated **macro F1 0.729**, trained on 166,447 transactions). A
   significant methodological finding — `XGBClassifier` silently ignoring
   `class_weight` — was caught and corrected during development, revealing
   **Random Forest** as the **champion model**. **Given each model's real
