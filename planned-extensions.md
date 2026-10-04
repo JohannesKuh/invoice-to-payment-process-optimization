@@ -26,6 +26,19 @@ of each completed activity and test — via regression — whether service time
 follows the predicted inverted-U pattern: moderate workload correlating with
 faster performance, with degradation at both very low and very high workload.
 
+**Extension: human vs. automated resources.** Building on the
+handover-of-work and working-together networks above, this adds one more
+segmentation dimension: comparing activities performed by human resources
+against those performed by batch/automated accounts (607 vs. 20 in this
+log, per Notebook 1). Rather than claiming a genuine "agent-centric"
+analysis in the modern autonomous-AI sense (this 2018–2019 dataset
+predates that paradigm), the comparison stays grounded in what the data
+supports: do system-executed steps show different throughput, deviation
+rates, or exception patterns than human-executed ones? Worth checking
+whether automated steps cluster around specific activities (e.g.,
+approvals, payment blocks) and whether that correlates with the
+bottleneck patterns already found in Notebook 4.
+
 ---
 
 ## Object-centric process mining *(higher complexity — "Project 1 v2")*
