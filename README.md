@@ -384,8 +384,6 @@ closer look.
 
 ## Limitations & Further Research
 
-*See Notebook 6, Section 6.6 for the full discussion of each point below.*
-
 - **Methodological trade-offs:** A strict as-of-GR prediction point (Part 1)
 excludes some potentially predictive signals to avoid hindsight leakage;
 vendor-grouped splitting prevents data leakage at the cost of
@@ -414,6 +412,8 @@ testing LightGBM/CatBoost for a fuller comparison; investigating whether
 the `sub_spend_area = Labels` throughput gap reflects a genuine process
 bottleneck or a data artifact. See [Planned Extensions](#planned-extensions)
 for the OCPM and social network analysis extensions.
+
+*See Notebook 6, Section 6.6 for the full discussion of each point above.*
 
 ## Tools & Technologies
 
