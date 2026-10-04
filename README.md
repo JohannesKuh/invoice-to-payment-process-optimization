@@ -334,7 +334,7 @@ The trained models were applied to different business scenarios based on
 the procurement dataset. The outcomes lead to the following business
 recommendations:
 
-**Part 1 — Throughput monitoring:** Applying the champion model to the
+- **Part 1 — Throughput monitoring:** Applying the champion model to the
 38,047 currently open cases shows predicted clearing times ranging from
 ~32 days (Gold-tier vendors) to ~106 days on average (Insufficient Data
 vendors). Two groups require closer monitoring: **"Insufficient Data"
@@ -345,7 +345,7 @@ translates into substantial aggregate business impact given this scale).
 Gold-tier vendors, by contrast, process fast enough to plausibly support
 early-payment discount terms where such arrangements exist.
 
-**Part 2 — Vendor tier prediction:** Model B estimates a full probability
+- **Part 2 — Vendor tier prediction:** Model B estimates a full probability
 distribution across all three award tiers for new or thin-history
 vendors — not just a single label — letting a user judge how much to
 trust each prediction. In practice: **treat predictions with a clear top
@@ -354,19 +354,19 @@ tiers (e.g. Bronze vs. Silver+, probabilities within ~15 percentage
 points) as "likely better than average, but the exact tier is uncertain"
 — worth a closer manual look rather than an automatic classification.
 
-Selecting three representative cases, the model reveals the following:
+  Selecting three representative cases, the model reveals the following:
 
-| Case | Item Category | Order Value | Bronze | No Award | Silver+ | Predicted | Actual |
-|---|---|---|---|---|---|---|---|
-| A | Sales | €2 | 0.1% | 0.0% | **99.9%** | Silver+ | Silver+ ✓ |
-| B | Packaging | €18,984 | 0.0% | **100.0%** | 0.0% | No Award | No Award ✓ |
-| C | Sales | €31 | **53.6%** | 8.2% | 38.2% | Bronze | Silver+ ✗ |
+  | Case | Item Category | Order Value | Bronze | No Award | Silver+ | Predicted | Actual |
+  |---|---|---|---|---|---|---|---|
+  | A | Sales | €2 | 0.1% | 0.0% | **99.9%** | Silver+ | Silver+ ✓ |
+  | B | Packaging | €18,984 | 0.0% | **100.0%** | 0.0% | No Award | No Award ✓ |
+  | C | Sales | €31 | **53.6%** | 8.2% | 38.2% | Bronze | Silver+ ✗ |
 
-Cases A and B illustrate a confident, correct prediction (**>99%** top
-probability); Case C illustrates the model's known limitation — a genuine
-Silver+ vendor predicted as Bronze, with the top two probabilities only
-~15 percentage points apart, exactly the kind of close call the guidance
-above warns against treating as definitive.
+  Cases A and B illustrate a confident, correct prediction (**>99%** top
+  probability); Case C illustrates the model's known limitation — a genuine
+  Silver+ vendor predicted as Bronze, with the top two probabilities only
+  ~15 percentage points apart, exactly the kind of close call the guidance
+  above warns against treating as definitive.
 
 **Overall**, neither Part 1's nor Part 2's models achieve strong
 predictive power in isolation. **Model A (existing vendors) is
@@ -386,14 +386,14 @@ closer look.
 
 *See Notebook 6, Section 6.6 for the full discussion of each point below.*
 
-**Methodological trade-offs:** A strict as-of-GR prediction point (Part 1)
+- **Methodological trade-offs:** A strict as-of-GR prediction point (Part 1)
 excludes some potentially predictive signals to avoid hindsight leakage;
 vendor-grouped splitting prevents data leakage at the cost of
 fine-grained class-balance control; merging Silver and Gold into Silver+
 resolved a small-sample problem for Model A, though Model B's larger
 scale might support keeping them separate.
 
-**Known limitations:** Silver+ remains difficult to predict across every
+- **Known limitations:** Silver+ remains difficult to predict across every
 model tested — likely a genuine data limitation, not a fixable modeling
 gap. Model B's predictions rest heavily on just two features
 (`spend_classification_NPR` and `order_value`, 58% combined importance),
@@ -407,7 +407,7 @@ meaningful comparison and the dataset is almost entirely concentrated in
 a single 13-month window (Jan 2018–Jan 2019), leaving too little genuine
 variation for a time-based analysis.
 
-**Further research:** A staged extension predicting from Invoice Receipt
+- **Further research:** A staged extension predicting from Invoice Receipt
 onward (once `gr_to_ir_days` is known) could improve on Part 1's current
 as-of-GR model; keeping Gold/Silver separate for Model B specifically;
 testing LightGBM/CatBoost for a fuller comparison; investigating whether
@@ -417,10 +417,10 @@ for the OCPM and social network analysis extensions.
 
 ## Tools & Technologies
 
-**Used in this project:** PM4Py · scikit-learn · XGBoost · Optuna ·
+- **Used in this project:** PM4Py · scikit-learn · XGBoost · Optuna ·
 Weights & Biases · SHAP · dtreeviz · joblib
 
-**Planned for future extensions** (see [Planned Extensions](#planned-extensions)
+- **Planned for future extensions** (see [Planned Extensions](#planned-extensions)
 and [`planned-extensions.md`](planned-extensions.md)): Power BI
 (incl. native Python visual integration) · Process.Science (Power BI
 visual)
