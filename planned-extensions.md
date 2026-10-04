@@ -5,7 +5,7 @@ timing, not whether. They are deliberately decoupled from the September 20,
 2026 deadline so they don't compete with the core pipeline under time
 pressure.
 
-*See the [README](../README.md) for the project overview and core findings.
+*See the [README](README.md) for the project overview and core findings.
 This document holds the detailed methodology, specific research questions,
 and citations for each planned extension.*
 
