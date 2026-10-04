@@ -171,8 +171,7 @@ challenge's own suggestion that item properties should determine which of
 "spaghetti" model — visual confirmation that a single unsegmented model
 cannot describe this process.*
 
-**2. Throughput analysis (enhancement):** The median throughput across each stage of
-the invoicing process is:
+**2. Throughput analysis (enhancement):** The median throughput across each stage of the invoicing process is:
 
 - **GR → Invoice Receipt:** 9.14 days (n = 210,370)
 - **Invoice Receipt → Clear Invoice:** 42.05 days (n = 183,293)
@@ -272,9 +271,7 @@ reference model.*
   **business volume does not drive violations; the worst rates
   concentrate among mid-sized vendors.**
 
-**4. Prediction (this project's extension, Notebook 6):**
-
-Based on these findings, three models were developed predicting throughput
+**4. Prediction (this project's extension, Notebook 6):** Based on these findings, three models were developed predicting throughput
 (Part 1) and vendors' performance (Part 2):
 
 - **Part 1 — Case-Level Throughput Prediction:** The **champion model
