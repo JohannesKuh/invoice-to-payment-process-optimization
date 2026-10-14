@@ -26,19 +26,6 @@ of each completed activity and test — via regression — whether service time
 follows the predicted inverted-U pattern: moderate workload correlating with
 faster performance, with degradation at both very low and very high workload.
 
-**Extension: human vs. automated resources.** Building on the
-handover-of-work and working-together networks above, this adds one more
-segmentation dimension: comparing activities performed by human resources
-against those performed by batch/automated accounts (607 vs. 20 in this
-log, per Notebook 1). Rather than claiming a genuine "agent-centric"
-analysis in the modern autonomous-AI sense (this 2018–2019 dataset
-predates that paradigm), the comparison stays grounded in what the data
-supports: do system-executed steps show different throughput, deviation
-rates, or exception patterns than human-executed ones? Worth checking
-whether automated steps cluster around specific activities (e.g.,
-approvals, payment blocks) and whether that correlates with the
-bottleneck patterns already found in Notebook 4.
-
 ---
 
 ## Object-centric process mining *(higher complexity — "Project 1 v2")*
@@ -75,6 +62,35 @@ compliance framing:
   their characteristic object-interaction pattern (one-to-one vs.
   high-multiplicity GR/Invoice relationships), and do higher-multiplicity
   vendors show more conformance deviations or invoice-value mismatches?
+
+**Method comparison: PM4Py vs. OCPQ.** The three questions above will be
+answered with two independent approaches on the same OCEL 2.0 file, and the
+results compared:
+
+- **PM4Py + pandas (primary route):** OCEL conversion, object-centric
+  overview (OC-DFG, object counts, multiplicity distribution), and the
+  constraint and label queries written as scripted pandas code on the OCEL
+  event, object and relation tables. Fully reproducible in the notebook and
+  directly connected to the statistics and clustering steps.
+- **[OCPQ](https://ocpq.aarkue.eu/) (cross-check):** a visual
+  object-centric query and constraint tool with a Rust engine, importing
+  OCEL 2.0 (JSON, XML, SQLite) and exporting result tables as CSV/XLSX
+  ([tool paper](https://ceur-ws.org/Vol-4032/paper-25.pdf);
+  [OCPQ: Object-Centric Process Querying and Constraints](https://doi.org/10.1007/978-3-031-92474-3_23)).
+  The same constraints (e.g., "every invoice has a related Goods Receipt
+  within N days") and labels (e.g., number of GRs/invoices per item) are
+  built as OCPQ queries; since the GUI is not scriptable, each query is
+  documented in the notebook with a screenshot and a plain description,
+  and the exported tables are saved alongside the results.
+
+The comparison covers (1) **result equivalence**, with identical counts and
+violation rates expected, so agreement validates both the OCEL conversion
+and both implementations, and any difference points to a bug or a modeling
+subtlety such as the definition of "related"; (2) effort to build each
+query; (3) reproducibility; (4) expressiveness; and (5) execution time. The
+expected trade-offs (OCPQ faster for exploration and with built-in
+constraint semantics, PM4Py better for reproducibility and downstream
+analysis) are hypotheses to be measured, not findings.
 
 ---
 
