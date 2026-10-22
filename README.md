@@ -442,7 +442,18 @@ invoice-to-payment-process-optimization/
 │   ├── 04_process_enhancement.ipynb
 │   ├── 05_feature_engineering.ipynb
 │   ├── 06_throughput_and_vendor_prediction.ipynb
-│   └── 07_shap_dtreeviz_explainability.ipynb
+│   ├── 07_shap_dtreeviz_explainability.ipynb
+│   ├── 08_social_network_analysis.ipynb            ← finished, not published yet
+│   └── 09_object_centric_process_mining.ipynb      ← planned
+│
+├── powerbi/                                        ← stretch goal, not yet started
+│   ├── InvoiceToPayment.pbip
+│   ├── InvoiceToPayment.SemanticModel/             (TMDL: tables, measures, relationships)
+│   ├── InvoiceToPayment.Report/
+│   └── InvoiceToPayment.pdf                        (static export)
+│
+├── docs/                                           ← stretch goal, not yet started
+│   └── data-model.md                               (measures and relationships via INFO.VIEW)
 │
 └── images/
     ├── 02_process_discovery/
@@ -459,11 +470,15 @@ invoice-to-payment-process-optimization/
     │   ├── model_a_confusion_matrices_full_dataset.png
     │   ├── model_b_confusion_matrix.png
     │   └── model_b_feature_importance.png
-    └── 07_shap_dtreeviz_explainability/
-        ├── part1_shap_summary.png
-        ├── dtreeviz_part1.png
-        ├── model_b_shap_summary.png
-        └── dtreeviz_part2.png
+    ├── 07_shap_dtreeviz_explainability/
+    │   ├── part1_shap_summary.png
+    │   ├── dtreeviz_part1.png
+    │   ├── model_b_shap_summary.png
+    │   └── dtreeviz_part2.png
+    ├── 08_social_network_analysis/
+    │   ├── handover_network.png
+    │   └── workload_vs_service_time.png
+    └── powerbi/                                    ← stretch goal, not yet started
 ```
 
 ## Acknowledgements
